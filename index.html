@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Anatomia Humana 360</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080c16;
+  --bg-2:#0d1424;
+  --surface:#111a2e;
+  --surface-2:#16213a;
+  --surface-3:#1c2a47;
+  --border:#233150;
+  --text:#e8edf7;
+  --text-dim:#a8b6cf;
+  --text-faint:#6d7ea0;
+  --cyan:#3fd7e0;
+  --cyan-dim:#1c8a91;
+  --blue:#4c8dff;
+  --violet:#9b8cff;
+  --green:#3ee08a;
+  --amber:#f2b84b;
+  --red:#f2685c;
+  --pink:#ef6fa8;
+  --radius-s:10px;
+  --radius-m:16px;
+  --radius-l:24px;
+  --font-head:"Space Grotesk",system-ui,sans-serif;
+  --font-body:"Inter",system-ui,sans-serif;
+  --font-mono:"JetBrains Mono",monospace;
+}
+:root[data-theme="light"]{
+  --bg:#f2f6fb;
+  --bg-2:#e8eef7;
+  --surface:#ffffff;
+  --surface-2:#eef3fa;
+  --surface-3:#e2eaf5;
+  --border:#d3ddec;
+  --text:#0e1b30;
+  --text-dim:#41567a;
+  --text-faint:#7285a6;
+  --cyan:#0891a8;
+  --cyan-dim:#0891a8;
+  --blue:#2f5fd6;
+  --violet:#6a56d6;
+  --green:#12925a;
+  --amber:#b3760a;
+  --red:#cf4436;
+  --pink:#c14a83;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  background:radial-gradient(1200px 800px at 15% -10%, #102243 0%, transparent 60%), var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  min-height:100vh;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+:root[data-theme="light"] body{ background:radial-gradient(1200px 800px at 15% -10%, #dbe7fb 0%, transparent 60%), var(--bg); }
+h1,h2,h3,h4{font-family:var(--font-head);margin:0;letter-spacing:-0.01em;color:var(--text);}
+p{margin:0;}
+button{font-family:inherit;cursor:pointer;}
+a{color:inherit;text-decoration:none;}
+::selection{background:var(--cyan);color:#04141a;}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:6px;}
+.scroll-lock{overflow:hidden;}
+
+/* ---------- LAYOUT SHELL ---------- */
+#app{display:flex;min-height:100vh;}
+.sidebar{
+  width:250px;flex-shrink:0;
+  background:linear-gradient(180deg,var(--surface),var(--bg-2));
+  border-right:1px solid var(--border);
+  padding:22px 16px;
+  position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;gap:22px;
+}
+.brand{display:flex;align-items:center;gap:10px;padding:0 6px;}
+.brand-mark{width:38px;height:38px;flex-shrink:0;}
+.brand-text{display:flex;flex-direction:column;line-height:1.1;}
+.brand-text b{font-family:var(--font-head);font-size:16px;font-weight:700;}
+.brand-text span{font-size:11px;color:var(--cyan);font-family:var(--font-mono);letter-spacing:.03em;}
+.nav-list{display:flex;flex-direction:column;gap:3px;}
+.nav-item{
+  display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--radius-s);
+  color:var(--text-dim);font-size:14px;font-weight:600;border:1px solid transparent;
+  background:transparent;width:100%;text-align:left;transition:background .15s,color .15s;
+}
+.nav-item svg{width:19px;height:19px;flex-shrink:0;}
+.nav-item:hover{background:var(--surface-2);color:var(--text);}
+.nav-item.active{background:linear-gradient(90deg,rgba(63,215,224,.16),rgba(63,215,224,.02));color:var(--cyan);border-color:rgba(63,215,224,.25);}
+.sidebar-foot{margin-top:auto;display:flex;flex-direction:column;gap:10px;}
+.progress-mini{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-s);padding:12px;}
+.progress-mini .lbl{font-size:11px;color:var(--text-faint);display:flex;justify-content:space-between;margin-bottom:7px;font-family:var(--font-mono);}
+.bar-track{height:6px;border-radius:99px;background:var(--surface-3);overflow:hidden;}
+.bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--blue));transition:width .5s ease;}
+.theme-toggle{display:flex;align-items:center;justify-content:space-between;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-s);padding:9px 12px;font-size:13px;font-weight:600;color:var(--text-dim);}
+.switch{width:38px;height:21px;border-radius:99px;background:var(--surface-3);position:relative;border:1px solid var(--border);flex-shrink:0;}
+.switch i{position:absolute;top:1px;left:1px;width:17px;height:17px;border-radius:99px;background:var(--cyan);transition:transform .2s;}
+:root[data-theme="light"] .switch i{transform:translateX(17px);}
+
+main{flex:1;min-width:0;padding:26px 30px 100px;max-width:1180px;}
+.topbar-mobile{display:none;}
+
+/* bottom nav mobile */
+.bottom-nav{display:none;}
+
+@media (max-width:900px){
+  .sidebar{display:none;}
+  main{padding:16px 14px 96px;}
+  .topbar-mobile{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:4px 2px 14px;position:sticky;top:0;background:var(--bg);z-index:20;
+  }
+  .bottom-nav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;z-index:30;
+    background:var(--surface);border-top:1px solid var(--border);
+    padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+    backdrop-filter:blur(14px);
+  }
+  .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;border:none;background:none;color:var(--text-faint);font-size:10.5px;font-weight:600;border-radius:10px;}
+  .bn-item svg{width:20px;height:20px;}
+  .bn-item.active{color:var(--cyan);}
+}
+
+/* ---------- COMMON COMPONENTS ---------- */
+.eyebrow{font-family:var(--font-mono);font-size:12px;color:var(--cyan);letter-spacing:.03em;}
+.page-head{margin-bottom:22px;}
+.page-head h1{font-size:clamp(24px,3.2vw,34px);margin-top:6px;}
+.page-head p{color:var(--text-dim);margin-top:8px;max-width:640px;font-size:14.5px;}
+
+.searchbar{
+  display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-m);padding:12px 16px;margin-bottom:8px;
+}
+.searchbar svg{width:18px;height:18px;color:var(--text-faint);flex-shrink:0;}
+.searchbar input{flex:1;background:none;border:none;color:var(--text);font-size:15px;font-family:inherit;}
+.searchbar input:focus{outline:none;}
+.search-results{position:relative;}
+.search-dropdown{
+  position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-m);box-shadow:0 20px 50px rgba(0,0,0,.35);z-index:40;max-height:360px;overflow-y:auto;
+}
+.search-dropdown .sd-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border);}
+.search-dropdown .sd-item:last-child{border-bottom:none;}
+.search-dropdown .sd-item:hover{background:var(--surface-2);}
+.sd-tag{font-size:10px;font-family:var(--font-mono);color:var(--text-faint);padding:2px 6px;border:1px solid var(--border);border-radius:99px;flex-shrink:0;}
+.sd-empty{padding:16px;color:var(--text-faint);font-size:13.5px;}
+
+.grid{display:grid;gap:14px;}
+.grid.cols-4{grid-template-columns:repeat(4,1fr);}
+.grid.cols-3{grid-template-columns:repeat(3,1fr);}
+.grid.cols-2{grid-template-columns:repeat(2,1fr);}
+@media (max-width:900px){.grid.cols-4,.grid.cols-3,.grid.cols-2{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:520px){.grid.cols-4,.grid.cols-3{grid-template-columns:repeat(2,1fr);}}
+
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-m);
+  padding:16px;cursor:pointer;transition:transform .15s, border-color .15s, background .15s;text-align:left;
+  display:flex;flex-direction:column;gap:10px;position:relative;
+}
+.card:hover{border-color:var(--cyan-dim);transform:translateY(-2px);background:var(--surface-2);}
+.card .fav-btn{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:99px;background:rgba(0,0,0,.25);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;}
+.card .fav-btn svg{width:14px;height:14px;color:var(--text-faint);}
+.card .fav-btn.active svg{color:var(--amber);}
+.card-icon{width:52px;height:52px;}
+.card h3{font-size:15px;}
+.card .card-sub{font-size:12px;color:var(--text-faint);font-family:var(--font-mono);}
+.card .card-desc{font-size:12.5px;color:var(--text-dim);line-height:1.45;}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-family:var(--font-mono);padding:3px 9px;border-radius:99px;background:var(--surface-3);color:var(--text-dim);border:1px solid var(--border);width:fit-content;}
+
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:34px 0 14px;}
+.section-title h2{font-size:19px;}
+.section-title .see-all{font-size:12.5px;color:var(--cyan);font-weight:600;}
+
+/* HOME */
+.hero{
+  background:linear-gradient(135deg,var(--surface),var(--bg-2));border:1px solid var(--border);
+  border-radius:var(--radius-l);padding:32px;display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:center;overflow:hidden;position:relative;
+}
+@media (max-width:900px){.hero{grid-template-columns:1fr;padding:22px;}}
+.hero h1{font-size:clamp(26px,4vw,40px);line-height:1.08;}
+.hero h1 span{color:var(--cyan);}
+.hero p{color:var(--text-dim);margin-top:12px;font-size:14.5px;max-width:480px;}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:99px;font-size:13.5px;font-weight:700;
+  border:1px solid transparent;transition:transform .15s, filter .15s;
+}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:linear-gradient(90deg,var(--cyan),var(--blue));color:#04141a;}
+.btn-primary:hover{filter:brightness(1.08);}
+.btn-outline{background:transparent;border-color:var(--border);color:var(--text);}
+.btn-outline:hover{background:var(--surface-2);}
+.hero-figure{display:flex;align-items:center;justify-content:center;}
+.hero-figure img{width:100%;max-width:230px;height:auto;}
+
+.facts-card{background:linear-gradient(135deg,rgba(63,215,224,.08),rgba(76,141,255,.05));border:1px solid var(--border);border-radius:var(--radius-m);padding:20px;margin-top:26px;}
+.facts-card h3{font-size:15px;display:flex;align-items:center;gap:8px;}
+.facts-card p{margin-top:8px;font-size:13.5px;color:var(--text-dim);}
+.facts-nav{display:flex;gap:6px;margin-top:14px;}
+.dot{width:6px;height:6px;border-radius:99px;background:var(--surface-3);}
+.dot.active{background:var(--cyan);width:18px;}
+
+/* DETAIL / BREADCRUMB */
+.crumb{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-faint);margin-bottom:16px;flex-wrap:wrap;}
+.crumb button{background:none;border:none;color:var(--text-faint);font-size:12.5px;font-weight:600;padding:0;}
+.crumb button:hover{color:var(--cyan);}
+.detail-layout{display:grid;grid-template-columns:320px 1fr;gap:24px;}
+@media (max-width:900px){.detail-layout{grid-template-columns:1fr;}}
+.detail-figure{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-l);
+  padding:26px;display:flex;flex-direction:column;align-items:center;gap:16px;height:fit-content;position:sticky;top:20px;
+}
+@media (max-width:900px){.detail-figure{position:static;}}
+.detail-figure svg{width:170px;height:170px;}
+.detail-figure h2{font-size:20px;text-align:center;}
+.detail-figure .sci{font-style:italic;color:var(--text-faint);font-size:13px;text-align:center;}
+.detail-actions{display:flex;gap:8px;width:100%;}
+.detail-actions button{flex:1;justify-content:center;}
+.info-blocks{display:flex;flex-direction:column;gap:12px;}
+.info-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-m);padding:18px;}
+.info-block .ib-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.info-block .ib-head svg{width:16px;height:16px;color:var(--cyan);}
+.info-block .ib-head h4{font-size:13.5px;color:var(--cyan);font-family:var(--font-mono);text-transform:none;}
+.info-block p{font-size:14px;color:var(--text-dim);line-height:1.6;}
+.info-block ul{margin:6px 0 0;padding-left:18px;color:var(--text-dim);font-size:13.5px;line-height:1.7;}
+.tag-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.related-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
+.related-pill{display:flex;align-items:center;gap:7px;background:var(--surface-2);border:1px solid var(--border);border-radius:99px;padding:6px 12px 6px 6px;font-size:12.5px;font-weight:600;}
+.related-pill svg{width:22px;height:22px;}
+
+/* SYSTEMS GRID special */
+.sys-card{align-items:flex-start;}
+.sys-card .card-icon{background:var(--surface-2);border-radius:var(--radius-s);padding:8px;width:44px;height:44px;}
+
+/* BIOLOGY levels */
+.levels-row{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:10px 2px 18px;}
+.level-node{
+  flex:1;min-width:120px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-m);
+  padding:16px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.level-node.active{border-color:var(--cyan);background:var(--surface-2);}
+.level-node svg{width:34px;height:34px;}
+.level-arrow{color:var(--text-faint);flex-shrink:0;}
+.level-arrow svg{width:18px;height:18px;}
+
+/* QUIZ */
+.quiz-diff-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px;}
+.diff-card{flex:1;min-width:150px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-m);padding:18px;text-align:left;}
+.diff-card:hover{border-color:var(--cyan-dim);}
+.diff-card h3{font-size:15px;margin-bottom:4px;}
+.diff-card p{font-size:12.5px;color:var(--text-faint);}
+.diff-dots{display:flex;gap:4px;margin-top:10px;}
+.diff-dots i{width:16px;height:5px;border-radius:99px;background:var(--surface-3);}
+.diff-dots i.on{background:var(--cyan);}
+.quiz-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-l);padding:26px;max-width:640px;}
+.quiz-progress{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;font-size:12.5px;color:var(--text-faint);font-family:var(--font-mono);}
+.quiz-q{font-size:18px;font-family:var(--font-head);margin-bottom:18px;}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;}
+.opt-btn{
+  text-align:left;padding:13px 16px;border-radius:var(--radius-s);border:1px solid var(--border);
+  background:var(--surface-2);color:var(--text);font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;
+}
+.opt-btn:hover:not(:disabled){border-color:var(--cyan-dim);}
+.opt-btn.correct{background:rgba(62,224,138,.14);border-color:var(--green);color:var(--green);}
+.opt-btn.wrong{background:rgba(242,104,92,.14);border-color:var(--red);color:var(--red);}
+.opt-btn:disabled{cursor:default;}
+.opt-letter{width:24px;height:24px;border-radius:99px;background:var(--surface-3);display:flex;align-items:center;justify-content:center;font-size:11.5px;font-family:var(--font-mono);flex-shrink:0;}
+.quiz-feedback{margin-top:16px;font-size:13px;color:var(--text-dim);background:var(--surface-2);border-radius:var(--radius-s);padding:12px 14px;border-left:3px solid var(--cyan);}
+.quiz-nextbtn{margin-top:18px;}
+.quiz-result{text-align:center;padding:30px 10px;}
+.quiz-result .score-big{font-family:var(--font-head);font-size:52px;color:var(--cyan);}
+.quiz-result p{color:var(--text-dim);margin-top:6px;}
+
+/* EXPLORER */
+.explorer-crumbs{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.explorer-crumbs .ec{padding:6px 13px;border-radius:99px;background:var(--surface-2);border:1px solid var(--border);font-size:12.5px;font-weight:600;color:var(--text-dim);}
+.explorer-crumbs .ec.on{color:var(--cyan);border-color:var(--cyan-dim);}
+.explorer-crumbs .arrow{color:var(--text-faint);font-size:12px;}
+
+/* FAVORITES empty */
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-faint);}
+.empty-state svg{width:52px;height:52px;margin-bottom:14px;opacity:.5;}
+.empty-state h3{color:var(--text-dim);margin-bottom:6px;font-size:16px;}
+.empty-state p{font-size:13.5px;max-width:280px;margin:0 auto;}
+
+/* utility */
+.mb-0{margin-bottom:0!important;}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.filter-chip{padding:7px 14px;border-radius:99px;border:1px solid var(--border);background:var(--surface);font-size:12.5px;font-weight:600;color:var(--text-dim);}
+.filter-chip.on{background:var(--cyan);color:#04141a;border-color:var(--cyan);}
+.region-legend{font-size:12px;color:var(--text-faint);margin-top:10px;}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* =========================================================================
+   ANATOMIA HUMANA 360 — dados educacionais (pt-BR)
+   ========================================================================= */
+
+const ICONS = {
+  home:'<path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/>',
+  body:'<circle cx="12" cy="4.5" r="2.2"/><path d="M12 7v6M8 10l4-1.2L16 10M9 20l3-7 3 7M8.5 13.5 7 20M15.5 13.5 17 20"/>',
+  systems:'<circle cx="12" cy="12" r="3"/><circle cx="5" cy="6" r="1.8"/><circle cx="19" cy="6" r="1.8"/><circle cx="5" cy="18" r="1.8"/><circle cx="19" cy="18" r="1.8"/><path d="M9.5 10.3 6.4 7.4M14.5 10.3l3.1-2.9M9.5 13.7 6.4 16.6M14.5 13.7l3.1 2.9"/>',
+  biology:'<path d="M12 2v6M9 5h6"/><ellipse cx="12" cy="15" rx="7" ry="7"/><path d="M8 12c1.5 2 6.5 2 8 0M8 15c1.5 2 6.5 2 8 0"/>',
+  quiz:'<circle cx="12" cy="12" r="9"/><path d="M9.2 9.5a2.8 2.8 0 1 1 3.7 2.6c-.8.4-1 1-1 1.7"/><circle cx="12" cy="17" r=".4" fill="currentColor"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  star:'<path d="M12 3.5 14.6 9l6 .9-4.3 4.2 1 6-5.3-2.8-5.3 2.8 1-6L3.4 9.9l6-.9Z"/>',
+  bone:'<path d="M6 6a2.5 2.5 0 1 1 3.5 2.3l5 5A2.5 2.5 0 1 1 18 18a2.5 2.5 0 0 1-3.7-2.3l-5-5A2.5 2.5 0 0 1 6 6Z"/>',
+  chevronR:'<path d="m9 6 6 6-6 6"/>',
+  chevronL:'<path d="m15 6-6 6 6 6"/>',
+  location:'<path d="M12 21s7-6.5 7-11.5a7 7 0 1 0-14 0C5 14.5 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.4"/>',
+  function:'<path d="M4 12h4l2-7 4 14 2-7h4"/>',
+  importance:'<path d="M12 3.5 14.6 9l6 .9-4.3 4.2 1 6-5.3-2.8-5.3 2.8 1-6L3.4 9.9l6-.9Z"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M12 3v2.2M12 18.8V21M21 12h-2.2M5.2 12H3M18 6l-1.5 1.5M7.5 16.5 6 18M18 18l-1.5-1.5M7.5 7.5 6 6"/>',
+  link:'<path d="M9 15 15 9"/><path d="M10 6h1a3.5 3.5 0 0 1 0 7h-1"/><path d="M14 18h-1a3.5 3.5 0 0 1 0-7h1"/>',
+  fact:'<circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 11h1v6h1"/>',
+  arrowRight:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+};
+function icon(name,cls){return `<svg class="${cls||''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]||''}</svg>`;}
+
+/* ---------------- SISTEMAS DO CORPO ---------------- */
+const SISTEMAS = [
+ {id:'nervoso',nome:'Sistema Nervoso',cor:'violet',orgaos:['cerebro','cerebelo','tronco-encefalico','medula-espinhal','nervos'],
+  funcao:'Controla e coordena todas as funções do corpo, recebendo informações dos sentidos, processando-as e enviando comandos aos músculos e glândulas.',
+  comoFuncionam:'Bilhões de neurônios se comunicam por impulsos elétricos e químicos (neurotransmissores). O encéfalo processa as informações, e a medula espinhal e os nervos periféricos transportam sinais entre o encéfalo e o resto do corpo.',
+  importancia:'Sem o sistema nervoso não haveria pensamento, movimento voluntário, memória ou controle automático de funções como respiração e batimentos cardíacos.',
+  curiosidades:['O cérebro humano tem cerca de 86 bilhões de neurônios.','Os impulsos nervosos podem viajar a mais de 100 metros por segundo.','O cérebro consome cerca de 20% da energia do corpo, mesmo pesando só 2% do peso corporal.'],
+  relacionados:['endocrino','muscular','orgaos-sentidos']},
+ {id:'cardiovascular',nome:'Sistema Cardiovascular',cor:'red',orgaos:['coracao','arterias','veias','capilares'],
+  funcao:'Transporta sangue, oxigênio, nutrientes, hormônios e células de defesa por todo o corpo, além de remover dióxido de carbono e resíduos.',
+  comoFuncionam:'O coração bombeia sangue através de uma rede de vasos sanguíneos. As artérias levam sangue rico em oxigênio do coração aos tecidos, as veias trazem sangue de volta e os capilares permitem as trocas com as células.',
+  importancia:'Garante que oxigênio e nutrientes cheguem a todas as células e que resíduos metabólicos sejam removidos, sendo essencial para a sobrevivência.',
+  curiosidades:['O coração bate cerca de 100 mil vezes por dia.','Se todos os vasos sanguíneos do corpo fossem esticados, dariam para percorrer cerca de 100 mil km.','O sangue leva menos de 1 minuto para circular por todo o corpo.'],
+  relacionados:['respiratorio','linfatico','urinario']},
+ {id:'respiratorio',nome:'Sistema Respiratório',cor:'cyan',orgaos:['pulmoes','traqueia','bronquios','diafragma','nariz'],
+  funcao:'Realiza as trocas gasosas: capta oxigênio do ar e elimina o dióxido de carbono produzido pelas células.',
+  comoFuncionam:'O ar entra pelo nariz ou boca, passa pela traqueia e brônquios até os pulmões, onde nos alvéolos ocorre a troca de gases com o sangue. O diafragma se contrai e relaxa para permitir a inspiração e expiração.',
+  importancia:'A respiração fornece o oxigênio necessário para a produção de energia nas células e remove o dióxido de carbono, um resíduo tóxico do metabolismo.',
+  curiosidades:['Os pulmões contêm cerca de 300 milhões de alvéolos.','Fazemos em média de 12 a 20 respirações por minuto em repouso.','O pulmão direito é ligeiramente maior que o esquerdo, que cede espaço ao coração.'],
+  relacionados:['cardiovascular','muscular']},
+ {id:'digestorio',nome:'Sistema Digestório',cor:'amber',orgaos:['esofago','estomago','figado','vesicula-biliar','pancreas','intestino-delgado','intestino-grosso','reto'],
+  funcao:'Transforma os alimentos em nutrientes que podem ser absorvidos pelo sangue e elimina os resíduos não aproveitados.',
+  comoFuncionam:'Os alimentos são triturados e misturados a enzimas na boca e no estômago, digeridos quimicamente no intestino delgado, onde os nutrientes são absorvidos, e a água é reabsorvida no intestino grosso antes da eliminação das fezes.',
+  importancia:'Sem a digestão, o corpo não conseguiria obter energia nem os blocos de construção necessários para crescer, se reparar e funcionar.',
+  curiosidades:['O intestino delgado tem em média 6 a 7 metros de comprimento.','O estômago produz um novo revestimento mucoso a cada poucos dias para não se autodigerir.','O fígado realiza mais de 500 funções diferentes no corpo.'],
+  relacionados:['endocrino','circulatorio','urinario']},
+ {id:'urinario',nome:'Sistema Urinário',cor:'blue',orgaos:['rins','ureteres','bexiga','uretra'],
+  funcao:'Filtra o sangue, removendo resíduos e excesso de líquidos, e mantém o equilíbrio de água, sais e pH do corpo.',
+  comoFuncionam:'Os rins filtram continuamente o sangue, produzindo a urina, que é conduzida pelos ureteres até a bexiga, onde é armazenada até ser eliminada pela uretra.',
+  importancia:'Mantém o equilíbrio interno (homeostase), controlando a pressão arterial, o volume de líquidos e removendo toxinas do corpo.',
+  curiosidades:['Os rins filtram cerca de 180 litros de sangue por dia.','Cada rim contém cerca de 1 milhão de pequenas unidades filtrantes chamadas néfrons.','É possível viver normalmente com apenas um rim.'],
+  relacionados:['cardiovascular','endocrino']},
+ {id:'esqueletico',nome:'Sistema Esquelético',cor:'text',orgaos:['ossos-generico','articulacoes','cartilagens','medula-ossea'],
+  funcao:'Sustenta o corpo, protege órgãos internos, permite o movimento junto com os músculos e produz células sanguíneas.',
+  comoFuncionam:'Os ossos formam uma estrutura rígida conectada por articulações, que permitem movimento. Os músculos se prendem aos ossos por tendões e os movem como alavancas.',
+  importancia:'Sem o esqueleto, o corpo não teria forma nem suporte, e órgãos vitais como o cérebro e o coração ficariam desprotegidos.',
+  curiosidades:['O corpo adulto tem 206 ossos, mas um bebê nasce com cerca de 300, que se fundem com o tempo.','O fêmur é o osso mais longo e resistente do corpo.','Os ossos são constantemente remodelados ao longo da vida.'],
+  relacionados:['muscular']},
+ {id:'muscular',nome:'Sistema Muscular',cor:'red',orgaos:['musculos-generico','tendoes'],
+  funcao:'Permite o movimento do corpo, mantém a postura e gera calor através da contração muscular.',
+  comoFuncionam:'Os músculos esqueléticos se contraem quando estimulados por impulsos nervosos, puxando os ossos aos quais estão presos por tendões, produzindo movimento.',
+  importancia:'Possibilita desde movimentos voluntários, como andar e falar, até funções involuntárias, como o batimento cardíaco e a digestão.',
+  curiosidades:['O corpo humano tem mais de 600 músculos.','O músculo mais forte em relação ao seu tamanho é o masseter, usado para mastigar.','Os músculos representam cerca de 40% do peso corporal.'],
+  relacionados:['esqueletico','nervoso']},
+ {id:'endocrino',nome:'Sistema Endócrino',cor:'amber',orgaos:['tireoide','paratireoides','suprarrenais','hipofise','pancreas'],
+  funcao:'Produz hormônios que regulam o crescimento, o metabolismo, o humor, a reprodução e o equilíbrio interno do corpo.',
+  comoFuncionam:'As glândulas endócrinas liberam hormônios diretamente na corrente sanguínea, que os transporta até células-alvo em todo o corpo, regulando suas atividades.',
+  importancia:'Controla processos de longo prazo do corpo, como crescimento, metabolismo energético, resposta ao estresse e desenvolvimento sexual.',
+  curiosidades:['A hipófise é chamada de "glândula mestra" porque controla outras glândulas.','A adrenalina, liberada pelas suprarrenais, prepara o corpo para reações rápidas de "luta ou fuga".','O sistema endócrino trabalha em conjunto contínuo com o sistema nervoso.'],
+  relacionados:['nervoso','digestorio']},
+ {id:'linfatico',nome:'Sistema Linfático',cor:'green',orgaos:['baco','timo','linfonodos'],
+  funcao:'Drena o excesso de líquido dos tecidos, transporta gorduras absorvidas no intestino e participa da defesa do corpo.',
+  comoFuncionam:'Vasos linfáticos coletam o líquido intersticial (linfa) dos tecidos e o filtram através dos linfonodos, onde células de defesa combatem microrganismos, antes de devolvê-lo à circulação sanguínea.',
+  importancia:'Ajuda a manter o equilíbrio de líquidos no corpo e é fundamental para a resposta imunológica contra infecções.',
+  curiosidades:['O corpo tem centenas de linfonodos espalhados, principalmente no pescoço, axilas e virilha.','O baço é o maior órgão linfático do corpo.','O sistema linfático não tem uma bomba própria como o coração; depende do movimento muscular para circular a linfa.'],
+  relacionados:['imunologico','cardiovascular']},
+ {id:'imunologico',nome:'Sistema Imunológico',cor:'green',orgaos:['linfonodos','baco','timo'],
+  funcao:'Defende o corpo contra vírus, bactérias, fungos e outras ameaças, reconhecendo e eliminando agentes invasores.',
+  comoFuncionam:'Células de defesa (glóbulos brancos), produzidas na medula óssea e amadurecidas em órgãos como o timo, circulam pelo sangue e pela linfa identificando e destruindo patógenos.',
+  importancia:'Sem defesa imunológica, infecções simples poderiam se tornar fatais; o sistema também ajuda a eliminar células anormais.',
+  curiosidades:['O timo é maior e mais ativo na infância, encolhendo com a idade.','Vacinas funcionam "treinando" o sistema imunológico para reconhecer um agente específico.','Existem dois tipos principais de imunidade: inata (de nascença) e adaptativa (adquirida).'],
+  relacionados:['linfatico','cardiovascular']},
+ {id:'reprodutor',nome:'Sistema Reprodutor',cor:'pink',orgaos:[],
+  funcao:'Responsável pela produção de gametas (óvulos e espermatozoides) e pela geração de uma nova vida.',
+  comoFuncionam:'Órgãos reprodutivos masculinos e femininos produzem hormônios sexuais e células reprodutivas; na fecundação, um espermatozoide e um óvulo se unem, dando início ao desenvolvimento de um novo organismo.',
+  importancia:'Garante a continuidade da espécie e influencia o desenvolvimento de características sexuais e hormonais ao longo da vida.',
+  curiosidades:['O desenvolvimento sexual é amplamente controlado por hormônios do sistema endócrino.','Este conteúdo é abordado de forma geral e respeitosa, com foco educacional em biologia.','A puberdade marca o amadurecimento do sistema reprodutor.'],
+  relacionados:['endocrino']},
+ {id:'tegumentar',nome:'Sistema Tegumentar',cor:'amber',orgaos:['pele'],
+  funcao:'Forma uma barreira protetora entre o corpo e o ambiente externo, além de ajudar a regular a temperatura corporal.',
+  comoFuncionam:'A pele, o maior órgão do corpo, é composta por camadas (epiderme, derme e hipoderme) que protegem contra micro-organismos, raios UV e desidratação, além de conter receptores sensoriais e glândulas de suor.',
+  importancia:'Protege órgãos internos, participa da produção de vitamina D, regula a temperatura e permite a sensação de tato, dor e temperatura.',
+  curiosidades:['A pele é o maior órgão do corpo humano.','A pele se renova completamente a cada 4 a 6 semanas aproximadamente.','As impressões digitais são únicas para cada pessoa.'],
+  relacionados:['nervoso','imunologico']},
+ {id:'orgaos-sentidos',nome:'Órgãos dos Sentidos',cor:'violet',orgaos:['olhos','ouvidos','nariz','lingua','pele'],
+  funcao:'Captam estímulos do ambiente (luz, som, cheiro, sabor, toque) e os transformam em sinais nervosos interpretados pelo cérebro.',
+  comoFuncionam:'Receptores especializados em cada órgão (como a retina no olho ou as papilas gustativas na língua) convertem estímulos físicos ou químicos em impulsos nervosos, enviados ao cérebro pelos nervos sensoriais.',
+  importancia:'Permitem que o corpo perceba e reaja ao ambiente, sendo essenciais para a sobrevivência, comunicação e aprendizado.',
+  curiosidades:['O olho humano consegue distinguir cerca de 10 milhões de cores diferentes.','O nariz consegue reconhecer milhares de odores distintos.','O paladar e o olfato trabalham juntos para percebermos o sabor dos alimentos.'],
+  relacionados:['nervoso']},
+];
+
+/* ---------------- REGIÕES DO CORPO ---------------- */
+const REGIOES = [
+ {id:'cabeca',nome:'Cabeça',orgaos:['cerebro','cerebelo','tronco-encefalico','cranio','olhos','ouvidos','nariz']},
+ {id:'face',nome:'Face',orgaos:['olhos','nariz','lingua','mandibula']},
+ {id:'pescoco',nome:'Pescoço',orgaos:['tireoide','paratireoides','esofago','traqueia']},
+ {id:'torax',nome:'Tórax',orgaos:['coracao','pulmoes','diafragma','esterno','costelas','timo']},
+ {id:'abdomen',nome:'Abdômen',orgaos:['estomago','figado','vesicula-biliar','pancreas','intestino-delgado','intestino-grosso','baco','rins']},
+ {id:'pelve',nome:'Pelve',orgaos:['bexiga','reto','uretra','pelve-osso']},
+ {id:'bracos',nome:'Braços',orgaos:['umero','radio','ulna','biceps-braquial','triceps-braquial','deltoide']},
+ {id:'maos',nome:'Mãos',orgaos:['ossos-mao','tendoes']},
+ {id:'pernas',nome:'Pernas',orgaos:['femur','tibia','fibula','patela','quadriceps','isquiotibiais','gastrocnemio']},
+ {id:'pes',nome:'Pés',orgaos:['ossos-pe','tendoes']},
+ {id:'coluna',nome:'Coluna Vertebral',orgaos:['coluna-vertebral','medula-espinhal','cartilagens']},
+];
+
+/* ---------------- BANCO DE ÓRGÃOS / ESTRUTURAS ---------------- */
+// shape: brain, heart, lung, bone, muscle, tube, gland, eye, ear, skin, vessel, blob, spine, joint
+const ORGAOS = [
+{id:'cerebro',nome:'Cérebro',cientifico:'Encephalon (telencéfalo + diencéfalo)',sistema:'nervoso',shape:'brain',cor:'violet',
+ onde:'Ocupa a maior parte da caixa craniana, na cabeça, protegido pelo crânio e por membranas chamadas meninges.',
+ funcao:'É o principal centro de controle do corpo: processa pensamentos, memórias, emoções, linguagem e comanda movimentos voluntários.',
+ importancia:'Sem o cérebro não haveria consciência, raciocínio ou controle preciso do corpo. Ele integra informações de todos os sentidos.',
+ comoFunciona:'Formado por bilhões de neurônios organizados em regiões especializadas (córtex, lobos), que se comunicam por sinais elétricos e químicos para gerar pensamento e ação.',
+ relacionados:['nervoso','orgaos-sentidos'],
+ curiosidades:['O cérebro tem a consistência de uma gelatina firme.','Representa cerca de 2% do peso corporal, mas usa 20% da energia.','Os dois hemisférios cerebrais se comunicam por um feixe de fibras chamado corpo caloso.']},
+{id:'cerebelo',nome:'Cerebelo',sistema:'nervoso',shape:'brain',cor:'violet',
+ onde:'Localizado na parte posterior e inferior do encéfalo, abaixo dos lobos occipitais do cérebro.',
+ funcao:'Coordena os movimentos voluntários, o equilíbrio e a postura corporal, ajustando a precisão dos movimentos.',
+ importancia:'Permite movimentos suaves e coordenados; danos a ele causam perda de equilíbrio e coordenação motora.',
+ comoFunciona:'Recebe informações dos músculos, articulações e do ouvido interno sobre a posição do corpo e ajusta os comandos motores em tempo real.',
+ relacionados:['nervoso','muscular'],
+ curiosidades:['Apesar de ser só 10% do volume do encéfalo, contém mais da metade de todos os seus neurônios.','Seu nome vem do latim e significa "pequeno cérebro".']},
+{id:'tronco-encefalico',nome:'Tronco Encefálico',sistema:'nervoso',shape:'brain',cor:'violet',
+ onde:'Conecta o cérebro à medula espinhal, na base do encéfalo.',
+ funcao:'Controla funções vitais automáticas como respiração, batimentos cardíacos, pressão arterial e o ciclo de sono e vigília.',
+ importancia:'É essencial para a sobrevivência: regula funções que mantêm o corpo vivo sem controle consciente.',
+ comoFunciona:'Composto por mesencéfalo, ponte e bulbo, atua como via de passagem de sinais entre o cérebro e o corpo e possui centros de controle automático.',
+ relacionados:['nervoso','cardiovascular','respiratorio'],
+ curiosidades:['Lesões graves no tronco encefálico podem ser incompatíveis com a vida.','É uma das primeiras estruturas do sistema nervoso a se formar no embrião.']},
+{id:'medula-espinhal',nome:'Medula Espinhal',sistema:'nervoso',shape:'spine',cor:'violet',
+ onde:'Percorre o interior da coluna vertebral, do tronco encefálico até a região lombar.',
+ funcao:'Conduz sinais nervosos entre o cérebro e o resto do corpo e coordena reflexos automáticos.',
+ importancia:'Permite a comunicação rápida entre encéfalo e corpo; lesões na medula podem causar paralisias.',
+ comoFunciona:'Formada por feixes de neurônios que transmitem impulsos sensoriais (do corpo para o cérebro) e motores (do cérebro para os músculos), além de processar reflexos simples localmente.',
+ relacionados:['nervoso','esqueletico'],
+ curiosidades:['O reflexo do joelho é processado direto na medula, sem esperar resposta do cérebro.','É protegida pela coluna vertebral e por líquido cefalorraquidiano.']},
+{id:'nervos',nome:'Nervos',sistema:'nervoso',shape:'muscle',cor:'violet',
+ onde:'Espalhados por todo o corpo, conectando o sistema nervoso central a músculos, pele e órgãos.',
+ funcao:'Transmitem impulsos elétricos que carregam informações sensoriais e comandos motores entre o corpo e o sistema nervoso central.',
+ importancia:'Sem os nervos, o cérebro não receberia informação dos sentidos nem conseguiria comandar os músculos.',
+ comoFunciona:'Feixes de fibras nervosas (axônios) conduzem impulsos elétricos revestidos por uma bainha de mielina, que acelera a transmissão do sinal.',
+ relacionados:['nervoso','muscular'],
+ curiosidades:['O nervo ciático é o mais longo e largo do corpo humano.','Alguns impulsos nervosos podem viajar a mais de 100 m/s.']},
+{id:'olhos',nome:'Olhos',cientifico:'Bulbo ocular',sistema:'orgaos-sentidos',shape:'eye',cor:'blue',
+ onde:'Localizados nas órbitas oculares do crânio, na face.',
+ funcao:'Captam a luz do ambiente e a convertem em sinais nervosos que permitem a visão.',
+ importancia:'A visão é um dos principais sentidos usados para interpretar o ambiente, ler e se locomover com segurança.',
+ comoFunciona:'A luz atravessa a córnea e o cristalino, é focada na retina, onde células fotossensíveis convertem a luz em impulsos elétricos enviados ao cérebro pelo nervo óptico.',
+ relacionados:['orgaos-sentidos','nervoso'],
+ curiosidades:['O olho humano pode distinguir cerca de 10 milhões de cores.','A córnea é uma das poucas partes do corpo sem vasos sanguíneos.']},
+{id:'ouvidos',nome:'Ouvidos',sistema:'orgaos-sentidos',shape:'ear',cor:'blue',
+ onde:'Localizados nas laterais da cabeça, com partes externas, médias e internas.',
+ funcao:'Captam ondas sonoras e as convertem em sinais nervosos, além de ajudar a manter o equilíbrio corporal.',
+ importancia:'A audição permite comunicação e percepção de sons do ambiente; o ouvido interno também é essencial para o equilíbrio.',
+ comoFunciona:'O som vibra o tímpano, os ossículos amplificam a vibração e a cóclea converte essas vibrações em impulsos nervosos enviados ao cérebro.',
+ relacionados:['orgaos-sentidos','nervoso'],
+ curiosidades:['O menor osso do corpo humano, o estribo, fica no ouvido médio.','O ouvido interno contém estruturas responsáveis pelo senso de equilíbrio.']},
+{id:'nariz',nome:'Nariz',sistema:'orgaos-sentidos',shape:'blob',cor:'blue',
+ onde:'Localizado no centro da face, sendo também parte das vias respiratórias.',
+ funcao:'Detecta odores e filtra, aquece e umidifica o ar que respiramos.',
+ importancia:'Permite o olfato, que contribui para o sabor dos alimentos, e protege o sistema respiratório de partículas e microrganismos.',
+ comoFunciona:'Receptores olfativos no topo da cavidade nasal detectam moléculas de odor e enviam sinais diretamente ao cérebro.',
+ relacionados:['orgaos-sentidos','respiratorio'],
+ curiosidades:['O nariz humano pode distinguir milhares de odores diferentes.','O olfato está intimamente ligado à memória e às emoções.']},
+{id:'lingua',nome:'Língua',sistema:'orgaos-sentidos',shape:'blob',cor:'blue',
+ onde:'Localizada dentro da cavidade oral, presa ao assoalho da boca.',
+ funcao:'Permite a percepção do paladar, auxilia na mastigação, deglutição e na articulação da fala.',
+ importancia:'Essencial para se alimentar corretamente e para a comunicação verbal.',
+ comoFunciona:'As papilas gustativas contêm receptores que detectam sabores (doce, salgado, azedo, amargo e umami) e enviam sinais ao cérebro.',
+ relacionados:['orgaos-sentidos','digestorio'],
+ curiosidades:['A língua é composta principalmente por músculos, sem ossos.','A percepção de sabor combina paladar e olfato.']},
+{id:'pele',nome:'Pele',sistema:'tegumentar',shape:'skin',cor:'amber',
+ onde:'Reveste toda a superfície externa do corpo.',
+ funcao:'Protege contra microrganismos e agressões externas, regula a temperatura corporal e permite a sensação de tato, dor e temperatura.',
+ importancia:'É a primeira barreira de defesa do corpo e o maior órgão do corpo humano em área e peso.',
+ comoFunciona:'Composta por epiderme (camada externa protetora), derme (com vasos, nervos e glândulas) e hipoderme (tecido adiposo), a pele regula a perda de calor através do suor e dos vasos sanguíneos.',
+ relacionados:['tegumentar','nervoso','imunologico'],
+ curiosidades:['A pele se renova completamente a cada 4 a 6 semanas.','Um adulto tem entre 1,5 e 2 m² de pele.']},
+{id:'coracao',nome:'Coração',cientifico:'Cor',sistema:'cardiovascular',shape:'heart',cor:'red',
+ onde:'Localizado no centro do tórax, ligeiramente inclinado para a esquerda, entre os pulmões.',
+ funcao:'Bombeia o sangue por todo o corpo, levando oxigênio e nutrientes às células e removendo dióxido de carbono.',
+ importancia:'É o motor da circulação sanguínea; sem seu funcionamento contínuo, os órgãos não recebem oxigênio e param de funcionar em minutos.',
+ comoFunciona:'Possui quatro câmaras (dois átrios e dois ventrículos) que se contraem ritmicamente, impulsionando o sangue pelas artérias e recebendo-o de volta pelas veias.',
+ relacionados:['cardiovascular','respiratorio'],
+ curiosidades:['Bate em média 100 mil vezes por dia.','Tem aproximadamente o tamanho de um punho fechado.','Gera eletricidade própria através de um marca-passo natural, o nó sinoatrial.']},
+{id:'arterias',nome:'Artérias',sistema:'cardiovascular',shape:'vessel',cor:'red',
+ onde:'Distribuídas por todo o corpo, saindo do coração em direção aos tecidos.',
+ funcao:'Transportam sangue rico em oxigênio do coração para os tecidos do corpo (com exceção da artéria pulmonar).',
+ importancia:'Garantem que oxigênio e nutrientes cheguem rapidamente a todos os órgãos e músculos.',
+ comoFunciona:'Possuem paredes musculares espessas e elásticas que resistem à alta pressão gerada pelo bombeamento do coração.',
+ relacionados:['cardiovascular'],
+ curiosidades:['A aorta é a maior artéria do corpo humano.','As artérias mais finas se ramificam em arteríolas antes de virar capilares.']},
+{id:'veias',nome:'Veias',sistema:'cardiovascular',shape:'vessel',cor:'red',
+ onde:'Distribuídas por todo o corpo, conduzindo sangue de volta ao coração.',
+ funcao:'Transportam sangue pobre em oxigênio dos tecidos de volta ao coração (com exceção das veias pulmonares).',
+ importancia:'Completam o ciclo da circulação, permitindo que o sangue seja reoxigenado nos pulmões.',
+ comoFunciona:'Possuem válvulas internas que impedem o refluxo do sangue, contando com a contração muscular para ajudar a empurrar o sangue de volta ao coração.',
+ relacionados:['cardiovascular'],
+ curiosidades:['As veias das pernas dependem muito da contração muscular para vencer a gravidade.','A veia cava é a maior veia do corpo humano.']},
+{id:'capilares',nome:'Capilares',sistema:'cardiovascular',shape:'vessel',cor:'red',
+ onde:'Presentes em quase todos os tecidos do corpo, conectando pequenas artérias a pequenas veias.',
+ funcao:'Permitem a troca de oxigênio, nutrientes, dióxido de carbono e resíduos entre o sangue e as células.',
+ importancia:'É onde realmente ocorrem as trocas essenciais para a vida das células, tornando possível a nutrição e oxigenação dos tecidos.',
+ comoFunciona:'Suas paredes extremamente finas, de uma única camada de células, permitem a passagem de substâncias por difusão.',
+ relacionados:['cardiovascular'],
+ curiosidades:['São tão finos que os glóbulos vermelhos passam quase um de cada vez.','O corpo tem bilhões de capilares.']},
+{id:'pulmoes',nome:'Pulmões',sistema:'respiratorio',shape:'lung',cor:'cyan',
+ onde:'Localizados no tórax, um de cada lado do coração, protegidos pela caixa torácica.',
+ funcao:'Realizam a troca gasosa: absorvem oxigênio do ar inspirado e eliminam dióxido de carbono do sangue.',
+ importancia:'Fornecem o oxigênio necessário para a produção de energia nas células de todo o corpo.',
+ comoFunciona:'O ar inspirado chega aos alvéolos pulmonares, pequenas bolsas envolvidas por capilares, onde ocorre a troca de gases por difusão.',
+ relacionados:['respiratorio','cardiovascular'],
+ curiosidades:['Os pulmões têm cerca de 300 milhões de alvéolos.','O pulmão direito é dividido em três lobos e o esquerdo em dois.']},
+{id:'traqueia',nome:'Traqueia',sistema:'respiratorio',shape:'tube',cor:'cyan',
+ onde:'Localizada no pescoço e no tórax, conectando a laringe aos brônquios.',
+ funcao:'Conduz o ar entre a laringe e os pulmões, mantendo a via aérea sempre aberta.',
+ importancia:'Garante uma via livre para a passagem do ar durante toda a respiração.',
+ comoFunciona:'É reforçada por anéis de cartilagem em forma de "C", que mantêm o tubo aberto mesmo quando o pescoço se move.',
+ relacionados:['respiratorio'],
+ curiosidades:['Tem cerca de 10 a 12 cm de comprimento em um adulto.','Se divide em dois brônquios principais na sua parte inferior.']},
+{id:'bronquios',nome:'Brônquios',sistema:'respiratorio',shape:'tube',cor:'cyan',
+ onde:'Ramificações da traqueia que entram nos pulmões direito e esquerdo.',
+ funcao:'Conduzem o ar da traqueia até estruturas menores dentro dos pulmões, os bronquíolos, até chegar aos alvéolos.',
+ importancia:'Formam a rede de tubos que distribui o ar por todo o tecido pulmonar.',
+ comoFunciona:'Se ramificam progressivamente em tubos cada vez menores, como os galhos de uma árvore, terminando nos alvéolos.',
+ relacionados:['respiratorio'],
+ curiosidades:['Essa ramificação é chamada de "árvore brônquica".','Os bronquíolos mais finos não têm mais cartilagem, apenas músculo liso.']},
+{id:'diafragma',nome:'Diafragma',sistema:'respiratorio',shape:'muscle',cor:'cyan',
+ onde:'Músculo em forma de cúpula localizado na base da caixa torácica, separando o tórax do abdômen.',
+ funcao:'Principal músculo da respiração, responsável por expandir e contrair a caixa torácica.',
+ importancia:'Sem sua contração rítmica, a respiração espontânea não seria possível.',
+ comoFunciona:'Ao se contrair, desce e achata, aumentando o espaço torácico e puxando ar para os pulmões; ao relaxar, sobe e ajuda a expulsar o ar.',
+ relacionados:['respiratorio','muscular'],
+ curiosidades:['O soluço acontece quando o diafragma se contrai de forma espasmódica e involuntária.','É o único músculo esquelético essencial para a vida que funciona de forma automática.']},
+{id:'esofago',nome:'Esôfago',sistema:'digestorio',shape:'tube',cor:'amber',
+ onde:'Tubo muscular que liga a faringe ao estômago, passando pelo pescoço e tórax.',
+ funcao:'Transporta o alimento da boca até o estômago por meio de contrações musculares.',
+ importancia:'É a via de passagem essencial para que o alimento mastigado chegue ao sistema digestório.',
+ comoFunciona:'Movimentos ondulatórios da musculatura, chamados peristaltismo, empurram o bolo alimentar em direção ao estômago.',
+ relacionados:['digestorio'],
+ curiosidades:['Tem cerca de 25 cm de comprimento em um adulto.','O peristaltismo funciona mesmo de cabeça para baixo.']},
+{id:'estomago',nome:'Estômago',sistema:'digestorio',shape:'blob',cor:'amber',
+ onde:'Localizado na parte superior esquerda do abdômen, logo abaixo do diafragma.',
+ funcao:'Armazena o alimento temporariamente e inicia a digestão química das proteínas por meio de ácidos e enzimas.',
+ importancia:'Prepara o alimento para a digestão e absorção que ocorrerão no intestino delgado.',
+ comoFunciona:'Suas paredes musculares misturam o alimento com suco gástrico (ácido clorídrico e enzimas), formando uma massa semilíquida chamada quimo.',
+ relacionados:['digestorio'],
+ curiosidades:['O suco gástrico é tão ácido que poderia dissolver metal, mas o muco protege as paredes do estômago.','Pode se expandir para armazenar até cerca de 1 litro de alimento.']},
+{id:'figado',nome:'Fígado',sistema:'digestorio',shape:'blob',cor:'amber',
+ onde:'Localizado na parte superior direita do abdômen, abaixo do diafragma.',
+ funcao:'Produz bile para digestão de gorduras, processa nutrientes absorvidos, armazena energia e neutraliza toxinas.',
+ importancia:'É essencial para o metabolismo, a desintoxicação do sangue e o armazenamento de nutrientes.',
+ comoFunciona:'Recebe sangue rico em nutrientes vindo do intestino, processa e armazena substâncias, produz proteínas do sangue e libera bile no intestino.',
+ relacionados:['digestorio','cardiovascular'],
+ curiosidades:['É o maior órgão interno sólido do corpo.','Tem uma notável capacidade de regeneração, podendo recuperar seu tamanho mesmo após remoção parcial.']},
+{id:'vesicula-biliar',nome:'Vesícula Biliar',sistema:'digestorio',shape:'blob',cor:'amber',
+ onde:'Pequeno órgão em forma de pera, localizado abaixo do fígado.',
+ funcao:'Armazena e concentra a bile produzida pelo fígado, liberando-a no intestino durante a digestão de gorduras.',
+ importancia:'Ajuda a digestão eficiente de gorduras ao liberar bile concentrada no momento certo.',
+ comoFunciona:'Quando alimentos gordurosos chegam ao intestino, a vesícula se contrai e libera bile através de um duto até o duodeno.',
+ relacionados:['digestorio'],
+ curiosidades:['É possível viver normalmente sem a vesícula biliar, caso seja removida.','Pode desenvolver cálculos biliares quando a bile se cristaliza.']},
+{id:'pancreas',nome:'Pâncreas',sistema:'digestorio',shape:'gland',cor:'amber',
+ onde:'Localizado atrás do estômago, no abdômen superior.',
+ funcao:'Produz enzimas digestivas que quebram carboidratos, proteínas e gorduras, além de hormônios como insulina e glucagon.',
+ importancia:'Fundamental tanto para a digestão quanto para o controle dos níveis de glicose no sangue.',
+ comoFunciona:'Sua parte exócrina libera enzimas digestivas no intestino delgado, enquanto sua parte endócrina (ilhotas pancreáticas) libera hormônios diretamente na corrente sanguínea.',
+ relacionados:['digestorio','endocrino'],
+ curiosidades:['A insulina, produzida no pâncreas, é essencial para as células absorverem glicose.','O pâncreas atua tanto como glândula exócrina quanto endócrina.']},
+{id:'intestino-delgado',nome:'Intestino Delgado',sistema:'digestorio',shape:'tube',cor:'amber',
+ onde:'Localizado no abdômen, entre o estômago e o intestino grosso.',
+ funcao:'Local principal de digestão química e absorção dos nutrientes dos alimentos.',
+ importancia:'É onde a maior parte dos nutrientes é absorvida e passa para o sangue, alimentando o corpo.',
+ comoFunciona:'Suas paredes internas possuem dobras e projeções chamadas vilosidades, que aumentam enormemente a superfície de absorção de nutrientes.',
+ relacionados:['digestorio'],
+ curiosidades:['Mede cerca de 6 a 7 metros de comprimento.','É dividido em três partes: duodeno, jejuno e íleo.']},
+{id:'intestino-grosso',nome:'Intestino Grosso',sistema:'digestorio',shape:'tube',cor:'amber',
+ onde:'Localizado no abdômen, envolvendo o intestino delgado, terminando no reto.',
+ funcao:'Absorve água e sais dos resíduos alimentares não digeridos e forma as fezes.',
+ importancia:'Garante o aproveitamento final de água e a eliminação organizada dos resíduos do corpo.',
+ comoFunciona:'Bactérias benéficas fermentam resíduos não digeridos, enquanto a parede intestinal absorve água, compactando os resíduos até formarem as fezes.',
+ relacionados:['digestorio'],
+ curiosidades:['Abriga trilhões de bactérias que compõem a microbiota intestinal.','Tem cerca de 1,5 metro de comprimento, bem menor que o intestino delgado.']},
+{id:'reto',nome:'Reto',sistema:'digestorio',shape:'tube',cor:'amber',
+ onde:'Porção final do intestino grosso, localizada na pelve.',
+ funcao:'Armazena as fezes antes da eliminação através do ânus.',
+ importancia:'Permite o controle voluntário do momento da evacuação.',
+ comoFunciona:'Suas paredes se distendem à medida que as fezes chegam, enviando sinais nervosos que geram a vontade de evacuar.',
+ relacionados:['digestorio'],
+ curiosidades:['Tem cerca de 12 a 15 cm de comprimento.','Trabalha junto com músculos do esfíncter anal para controlar a evacuação.']},
+{id:'rins',nome:'Rins',sistema:'urinario',shape:'blob',cor:'blue',
+ onde:'Localizados na parte posterior do abdômen, um de cada lado da coluna vertebral.',
+ funcao:'Filtram o sangue, removendo resíduos e excesso de água, formando a urina, além de regular a pressão arterial.',
+ importancia:'Mantêm o equilíbrio químico do sangue e removem toxinas, sendo vitais para a homeostase do corpo.',
+ comoFunciona:'Milhões de unidades filtrantes chamadas néfrons filtram o sangue continuamente, reabsorvendo o que é útil e excretando o restante como urina.',
+ relacionados:['urinario','cardiovascular'],
+ curiosidades:['Cada rim tem cerca de 1 milhão de néfrons.','Os rins filtram todo o sangue do corpo cerca de 40 vezes por dia.']},
+{id:'ureteres',nome:'Ureteres',sistema:'urinario',shape:'tube',cor:'blue',
+ onde:'Dois tubos finos que conectam cada rim à bexiga.',
+ funcao:'Transportam a urina produzida pelos rins até a bexiga urinária.',
+ importancia:'Garantem que a urina siga um caminho seguro dos rins até seu local de armazenamento.',
+ comoFunciona:'Movimentos peristálticos de suas paredes musculares empurram a urina em pequenas quantidades até a bexiga.',
+ relacionados:['urinario'],
+ curiosidades:['Têm cerca de 25 a 30 cm de comprimento cada.','Cálculos renais podem ficar presos nos ureteres, causando dor intensa.']},
+{id:'bexiga',nome:'Bexiga',sistema:'urinario',shape:'blob',cor:'blue',
+ onde:'Órgão muscular oco localizado na pelve.',
+ funcao:'Armazena a urina até que seja eliminada do corpo através da uretra.',
+ importancia:'Permite o controle voluntário do momento da micção, evitando eliminação constante de urina.',
+ comoFunciona:'Suas paredes musculares se expandem para armazenar urina e se contraem durante a micção, auxiliadas pelo relaxamento de esfíncteres.',
+ relacionados:['urinario'],
+ curiosidades:['Pode armazenar entre 300 e 500 ml de urina confortavelmente.','A sensação de "vontade de urinar" surge quando ela está parcialmente cheia.']},
+{id:'uretra',nome:'Uretra',sistema:'urinario',shape:'tube',cor:'blue',
+ onde:'Canal que conduz a urina da bexiga para fora do corpo.',
+ funcao:'Permite a eliminação da urina armazenada na bexiga.',
+ importancia:'É a via final do processo de excreção urinária.',
+ comoFunciona:'Um esfíncter muscular controla a passagem da urina, relaxando de forma voluntária durante a micção.',
+ relacionados:['urinario'],
+ curiosidades:['Tem comprimento diferente entre homens e mulheres devido a diferenças anatômicas.']},
+{id:'baco',nome:'Baço',sistema:'linfatico',shape:'blob',cor:'green',
+ onde:'Localizado na parte superior esquerda do abdômen, próximo ao estômago.',
+ funcao:'Filtra o sangue, remove células sanguíneas envelhecidas e participa da resposta imunológica.',
+ importancia:'Ajuda a manter a qualidade do sangue e contribui para a defesa do corpo contra infecções.',
+ comoFunciona:'Contém tecido especializado que filtra o sangue, capturando e destruindo hemácias velhas e ativando células de defesa.',
+ relacionados:['linfatico','imunologico','cardiovascular'],
+ curiosidades:['É o maior órgão do sistema linfático.','É possível viver sem o baço, embora aumente o risco de certas infecções.']},
+{id:'timo',nome:'Timo',sistema:'linfatico',shape:'gland',cor:'green',
+ onde:'Localizado na parte superior do tórax, atrás do esterno.',
+ funcao:'Local onde os linfócitos T amadurecem, tornando-se células de defesa capazes de combater infecções.',
+ importancia:'É essencial para o desenvolvimento do sistema imunológico, especialmente durante a infância.',
+ comoFunciona:'Células imunes imaturas migram até o timo, onde passam por um processo de "treinamento" para reconhecer o que é próprio do corpo e o que é estranho.',
+ relacionados:['linfatico','imunologico'],
+ curiosidades:['É maior e mais ativo em crianças, diminuindo de tamanho com a idade.']},
+{id:'linfonodos',nome:'Linfonodos',sistema:'linfatico',shape:'gland',cor:'green',
+ onde:'Pequenas estruturas espalhadas pelo corpo, mais concentradas no pescoço, axilas e virilha.',
+ funcao:'Filtram a linfa, capturando microrganismos e células anormais, e abrigam células de defesa.',
+ importancia:'São postos de vigilância do sistema imunológico, ajudando a combater infecções antes que se espalhem.',
+ comoFunciona:'A linfa passa pelos linfonodos, onde células de defesa como os linfócitos identificam e atacam patógenos presentes no líquido.',
+ relacionados:['linfatico','imunologico'],
+ curiosidades:['Ficam inchados quando o corpo está combatendo uma infecção, um sinal comum de gripes e resfriados.']},
+{id:'tireoide',nome:'Tireoide',sistema:'endocrino',shape:'gland',cor:'amber',
+ onde:'Localizada na parte frontal do pescoço, abaixo da laringe.',
+ funcao:'Produz hormônios que regulam o metabolismo, a produção de energia e o crescimento do corpo.',
+ importancia:'Controla a velocidade com que o corpo usa energia, afetando peso, temperatura corporal e frequência cardíaca.',
+ comoFunciona:'Utiliza iodo da alimentação para produzir os hormônios tiroxina (T4) e triiodotironina (T3), liberados na corrente sanguínea.',
+ relacionados:['endocrino'],
+ curiosidades:['Tem formato de borboleta.','Seu funcionamento inadequado pode causar hipertireoidismo ou hipotireoidismo.']},
+{id:'paratireoides',nome:'Paratireoides',sistema:'endocrino',shape:'gland',cor:'amber',
+ onde:'Quatro pequenas glândulas localizadas atrás da tireoide, no pescoço.',
+ funcao:'Regulam os níveis de cálcio no sangue através da produção do paratormônio (PTH).',
+ importancia:'O cálcio é essencial para os ossos, os músculos e a transmissão de sinais nervosos, e essas glândulas mantêm seus níveis equilibrados.',
+ comoFunciona:'Quando os níveis de cálcio no sangue caem, liberam PTH, que estimula a liberação de cálcio dos ossos e aumenta sua absorção.',
+ relacionados:['endocrino','esqueletico'],
+ curiosidades:['São tão pequenas que, no passado, eram frequentemente removidas por engano em cirurgias da tireoide.']},
+{id:'suprarrenais',nome:'Glândulas Suprarrenais',sistema:'endocrino',shape:'gland',cor:'amber',
+ onde:'Localizadas sobre a parte superior de cada rim.',
+ funcao:'Produzem hormônios como adrenalina e cortisol, envolvidos na resposta ao estresse e no metabolismo.',
+ importancia:'Preparam o corpo para reagir rapidamente a situações de perigo ou estresse ("luta ou fuga").',
+ comoFunciona:'A parte externa (córtex) produz hormônios como o cortisol, enquanto a parte interna (medula) libera adrenalina em situações de estresse.',
+ relacionados:['endocrino','urinario'],
+ curiosidades:['A adrenalina pode aumentar a frequência cardíaca e a força muscular temporariamente em situações de emergência.']},
+{id:'hipofise',nome:'Hipófise',cientifico:'Glândula pituitária',sistema:'endocrino',shape:'gland',cor:'amber',
+ onde:'Localizada na base do encéfalo, ligada ao hipotálamo.',
+ funcao:'Chamada de "glândula mestra", controla a atividade de várias outras glândulas endócrinas do corpo.',
+ importancia:'Regula o crescimento, a reprodução, o metabolismo e outras funções hormonais essenciais.',
+ comoFunciona:'Libera hormônios que estimulam outras glândulas, como a tireoide e as suprarrenais, além de hormônios de crescimento diretamente.',
+ relacionados:['endocrino','nervoso'],
+ curiosidades:['Tem cerca do tamanho de uma ervilha.','É controlada diretamente pelo hipotálamo, uma região do cérebro.']},
+{id:'articulacoes',nome:'Articulações',sistema:'esqueletico',shape:'joint',cor:'text',
+ onde:'Presentes em todo o esqueleto, nos pontos onde dois ou mais ossos se encontram.',
+ funcao:'Permitem o movimento entre os ossos e proporcionam flexibilidade ao esqueleto.',
+ importancia:'Sem articulações, o esqueleto seria rígido e o movimento do corpo seria impossível.',
+ comoFunciona:'Podem ser fixas, semimóveis ou móveis (como joelho e ombro), sendo estas últimas revestidas por cartilagem e lubrificadas por líquido sinovial para reduzir o atrito.',
+ relacionados:['esqueletico','muscular'],
+ curiosidades:['O joelho é uma das articulações mais complexas do corpo.','O líquido sinovial funciona como um lubrificante natural.']},
+{id:'tendoes',nome:'Tendões',sistema:'muscular',shape:'muscle',cor:'red',
+ onde:'Localizados nas extremidades dos músculos, conectando-os aos ossos.',
+ funcao:'Transmitem a força gerada pela contração muscular para os ossos, produzindo movimento.',
+ importancia:'Sem os tendões, os músculos não conseguiriam mover o esqueleto de forma eficiente.',
+ comoFunciona:'São formados por tecido conjuntivo fibroso resistente, que ancora firmemente o músculo ao osso.',
+ relacionados:['muscular','esqueletico'],
+ curiosidades:['O tendão de Aquiles, no calcanhar, é o mais forte e espesso do corpo.']},
+{id:'ligamentos',nome:'Ligamentos',sistema:'esqueletico',shape:'joint',cor:'text',
+ onde:'Presentes nas articulações, conectando osso a osso.',
+ funcao:'Estabilizam as articulações, limitando movimentos excessivos e prevenindo lesões.',
+ importancia:'Mantêm a estrutura das articulações e evitam deslocamentos ou luxações.',
+ comoFunciona:'Compostos por tecido conjuntivo resistente e pouco elástico, seguram os ossos entre si nas articulações.',
+ relacionados:['esqueletico'],
+ curiosidades:['Lesões nos ligamentos, como a ruptura do ligamento cruzado do joelho, são comuns em esportes.']},
+{id:'cartilagens',nome:'Cartilagens',sistema:'esqueletico',shape:'joint',cor:'text',
+ onde:'Presentes em articulações, orelhas, nariz, traqueia e discos entre as vértebras.',
+ funcao:'Fornecem suporte flexível e reduzem o atrito entre os ossos nas articulações.',
+ importancia:'Protegem as extremidades dos ossos e permitem movimentos suaves e sem dor nas articulações.',
+ comoFunciona:'Tecido conjuntivo firme, porém flexível, que absorve impactos e reduz o atrito, sem vasos sanguíneos próprios.',
+ relacionados:['esqueletico'],
+ curiosidades:['Por não ter vasos sanguíneos, a cartilagem se regenera muito lentamente quando lesionada.']},
+{id:'medula-ossea',nome:'Medula Óssea',sistema:'esqueletico',shape:'bone',cor:'text',
+ onde:'Localizada no interior de ossos como o esterno, a pelve e os ossos longos.',
+ funcao:'Produz células sanguíneas: glóbulos vermelhos, glóbulos brancos e plaquetas.',
+ importancia:'É a "fábrica" do sangue, essencial para o transporte de oxigênio, a defesa imunológica e a coagulação.',
+ comoFunciona:'A medula óssea vermelha contém células-tronco que se dividem e se especializam continuamente em diferentes tipos de células sanguíneas.',
+ relacionados:['esqueletico','cardiovascular','imunologico'],
+ curiosidades:['Transplantes de medula óssea podem tratar certos tipos de câncer no sangue.']},
+];
+
+// generic organ entries for bones/muscles group cards
+ORGAOS.push({id:'ossos-generico',nome:'Ossos (visão geral)',sistema:'esqueletico',shape:'bone',cor:'text',
+ onde:'Formam o esqueleto, distribuídos por todo o corpo.',
+ funcao:'Sustentam o corpo, protegem órgãos, permitem o movimento e armazenam minerais como cálcio.',
+ importancia:'Sem os ossos, o corpo não teria forma nem suporte estrutural.',
+ comoFunciona:'Tecido rígido e mineralizado, constantemente remodelado por células chamadas osteoblastos e osteoclastos. Veja a seção "Esqueleto" para explorar cada osso individualmente.',
+ relacionados:['esqueletico','muscular'],
+ curiosidades:['O corpo adulto tem 206 ossos.']});
+ORGAOS.push({id:'musculos-generico',nome:'Músculos (visão geral)',sistema:'muscular',shape:'muscle',cor:'red',
+ onde:'Distribuídos por todo o corpo, presos aos ossos ou formando órgãos internos.',
+ funcao:'Permitem o movimento voluntário e involuntário, além de gerar calor corporal.',
+ importancia:'Sem os músculos não haveria movimento, postura ou até batimento cardíaco.',
+ comoFunciona:'Fibras musculares se contraem ao receber estímulo nervoso. Veja a seção "Músculos" para explorar cada grupo muscular individualmente.',
+ relacionados:['muscular','esqueletico'],
+ curiosidades:['Existem três tipos de músculo: esquelético, liso e cardíaco.']});
+
+/* ---------------- SISTEMA ESQUELÉTICO — OSSOS ---------------- */
+const OSSOS = [
+{id:'cranio',nome:'Crânio',regiao:'Cabeça',onde:'Estrutura óssea que envolve e protege o cérebro.',funcao:'Protege o encéfalo contra impactos e dá forma à cabeça.',relacao:'Conecta-se à mandíbula através da articulação temporomandibular.',curiosidade:'É formado por vários ossos unidos por suturas, que se fundem completamente na vida adulta.'},
+{id:'mandibula',nome:'Mandíbula',regiao:'Face',onde:'Osso móvel na parte inferior da face.',funcao:'Permite a mastigação e participa da articulação da fala.',relacao:'É o único osso móvel do crânio, articulado com o osso temporal.',curiosidade:'É o osso mais forte e maior da face.'},
+{id:'clavicula',nome:'Clavícula',regiao:'Tórax/Ombro',onde:'Osso longo e fino localizado entre o esterno e a escápula.',funcao:'Conecta o braço ao tronco e sustenta o ombro.',relacao:'Articula-se com o esterno e com a escápula.',curiosidade:'É um dos ossos mais frequentemente fraturados no corpo.'},
+{id:'escapula',nome:'Escápula',regiao:'Costas/Ombro',onde:'Osso triangular e plano localizado na parte superior das costas.',funcao:'Serve de ponto de fixação para músculos do ombro e braço, permitindo grande amplitude de movimento.',relacao:'Articula-se com a clavícula e o úmero.',curiosidade:'Também é chamada popularmente de "omoplata".'},
+{id:'esterno',nome:'Esterno',regiao:'Tórax',onde:'Osso plano localizado no centro do tórax.',funcao:'Protege órgãos vitais como o coração, e serve de ponto de fixação para as costelas.',relacao:'Conecta-se às costelas através de cartilagens costais.',curiosidade:'É um local comum de coleta de medula óssea.'},
+{id:'costelas',nome:'Costelas',regiao:'Tórax',onde:'Doze pares de ossos curvos que formam a caixa torácica.',funcao:'Protegem o coração e os pulmões e auxiliam nos movimentos respiratórios.',relacao:'Conectam-se à coluna vertebral atrás e, a maioria, ao esterno na frente.',curiosidade:'Nem todas as costelas se conectam diretamente ao esterno; as últimas são chamadas de "costelas flutuantes".'},
+{id:'coluna-vertebral',nome:'Coluna Vertebral',regiao:'Costas',onde:'Estende-se da base do crânio até a pelve, ao longo das costas.',funcao:'Sustenta o corpo, protege a medula espinhal e permite flexibilidade do tronco.',relacao:'Abriga e protege a medula espinhal, conectando-se ao crânio e à pelve.',curiosidade:'É formada por 33 vértebras, divididas em regiões cervical, torácica, lombar, sacral e coccígea.'},
+{id:'umero',nome:'Úmero',regiao:'Braço',onde:'Osso longo do braço, entre o ombro e o cotovelo.',funcao:'Permite os movimentos do braço, servindo de ponto de fixação para músculos importantes.',relacao:'Articula-se com a escápula no ombro e com o rádio e a ulna no cotovelo.',curiosidade:'É o osso mais longo do membro superior.'},
+{id:'radio',nome:'Rádio',regiao:'Antebraço',onde:'Um dos dois ossos do antebraço, localizado do lado do polegar.',funcao:'Permite a rotação do antebraço, como ao girar a palma da mão para cima ou para baixo.',relacao:'Articula-se com o úmero, a ulna e os ossos do punho.',curiosidade:'Trabalha em conjunto com a ulna para permitir os movimentos de pronação e supinação.'},
+{id:'ulna',nome:'Ulna',regiao:'Antebraço',onde:'Um dos dois ossos do antebraço, localizado do lado do dedo mínimo.',funcao:'Forma a principal articulação do cotovelo, permitindo flexão e extensão do braço.',relacao:'Articula-se com o úmero no cotovelo e com o rádio.',curiosidade:'A ponta da ulna forma o "osso do cotovelo" que sentimos ao tocar essa região.'},
+{id:'ossos-mao',nome:'Ossos da Mão',regiao:'Mão',onde:'Conjunto de ossos que formam o punho, a palma e os dedos.',funcao:'Permitem os movimentos finos e precisos das mãos, como segurar e manipular objetos.',relacao:'Conectam-se ao rádio e à ulna através do punho.',curiosidade:'Cada mão tem 27 ossos, entre carpo, metacarpo e falanges.'},
+{id:'pelve-osso',nome:'Pelve (osso ilíaco)',regiao:'Quadril',onde:'Estrutura óssea em forma de bacia na base do tronco.',funcao:'Sustenta o peso do tronco, protege órgãos pélvicos e conecta a coluna às pernas.',relacao:'Articula-se com o fêmur e com a base da coluna vertebral (sacro).',curiosidade:'A pelve feminina costuma ser mais larga, adaptada para a gestação.'},
+{id:'femur',nome:'Fêmur',regiao:'Coxa',onde:'Osso da coxa, entre o quadril e o joelho.',funcao:'Sustenta o peso do corpo durante a posição em pé e a locomoção.',relacao:'Articula-se com a pelve no quadril e com a tíbia e a patela no joelho.',curiosidade:'É o osso mais longo e mais forte do corpo humano.'},
+{id:'patela',nome:'Patela',regiao:'Joelho',onde:'Pequeno osso localizado na frente da articulação do joelho.',funcao:'Protege a articulação do joelho e melhora a eficiência dos músculos da coxa ao andar.',relacao:'Desliza sobre o fêmur durante os movimentos do joelho.',curiosidade:'É popularmente conhecida como "rótula".'},
+{id:'tibia',nome:'Tíbia',regiao:'Perna',onde:'Maior dos dois ossos da perna, localizado na parte anterior.',funcao:'Principal osso de sustentação de peso da perna.',relacao:'Articula-se com o fêmur no joelho e com os ossos do pé no tornozelo.',curiosidade:'É o segundo osso mais longo do corpo, depois do fêmur.'},
+{id:'fibula',nome:'Fíbula',regiao:'Perna',onde:'Osso fino localizado ao lado da tíbia, na parte lateral da perna.',funcao:'Auxilia na estabilidade do tornozelo e serve de fixação para músculos da perna.',relacao:'Articula-se com a tíbia e com os ossos do tornozelo.',curiosidade:'Suporta uma parcela muito menor do peso corporal comparada à tíbia.'},
+{id:'ossos-pe',nome:'Ossos do Pé',regiao:'Pé',onde:'Conjunto de ossos que formam o tornozelo, o meio do pé e os dedos.',funcao:'Sustentam o peso corporal e permitem o equilíbrio e a locomoção.',relacao:'Conectam-se à tíbia e à fíbula através do tornozelo.',curiosidade:'Cada pé tem 26 ossos, formando arcos que absorvem impacto ao caminhar.'},
+];
+
+/* ---------------- SISTEMA MUSCULAR — MÚSCULOS ---------------- */
+const MUSCULOS = [
+{id:'trapezio',nome:'Trapézio',onde:'Músculo grande e triangular nas costas superiores e pescoço.',funcao:'Movimenta e estabiliza a escápula e ajuda a inclinar e girar a cabeça.',relacao:'Fixa-se ao crânio, à coluna vertebral, à clavícula e à escápula.'},
+{id:'deltoide',nome:'Deltoide',onde:'Músculo que cobre a articulação do ombro.',funcao:'Permite elevar e girar o braço em várias direções.',relacao:'Conecta a clavícula e a escápula ao úmero.'},
+{id:'peitoral-maior',nome:'Peitoral Maior',onde:'Músculo grande e plano na parte anterior do tórax.',funcao:'Move o braço em direção ao corpo e participa da rotação do ombro.',relacao:'Fixa-se ao esterno, à clavícula e ao úmero.'},
+{id:'biceps-braquial',nome:'Bíceps Braquial',onde:'Músculo na parte frontal do braço.',funcao:'Flexiona o cotovelo e gira o antebraço.',relacao:'Fixa-se à escápula e ao rádio.'},
+{id:'triceps-braquial',nome:'Tríceps Braquial',onde:'Músculo na parte posterior do braço.',funcao:'Estende o cotovelo, esticando o braço.',relacao:'Fixa-se à escápula, ao úmero e à ulna.'},
+{id:'reto-abdominal',nome:'Reto Abdominal',onde:'Músculo localizado na parte frontal do abdômen.',funcao:'Flexiona o tronco e comprime o abdômen, auxiliando na postura e respiração.',relacao:'Fixa-se às costelas e à pelve.'},
+{id:'gluteo-maximo',nome:'Glúteo Máximo',onde:'Maior músculo do glúteo, na região das nádegas.',funcao:'Estende e gira o quadril, essencial para andar, correr e subir escadas.',relacao:'Fixa-se à pelve e ao fêmur.'},
+{id:'quadriceps',nome:'Quadríceps',onde:'Grupo de quatro músculos na parte frontal da coxa.',funcao:'Estende o joelho, sendo essencial para andar, correr e saltar.',relacao:'Fixa-se à pelve e ao fêmur, conectando-se à tíbia via tendão patelar.'},
+{id:'isquiotibiais',nome:'Isquiotibiais',onde:'Grupo de músculos na parte posterior da coxa.',funcao:'Flexiona o joelho e estende o quadril.',relacao:'Fixa-se à pelve, ao fêmur, à tíbia e à fíbula.'},
+{id:'gastrocnemio',nome:'Gastrocnêmio',onde:'Principal músculo da panturrilha, na parte posterior da perna.',funcao:'Flexiona o pé para baixo, essencial para andar, correr e ficar na ponta dos pés.',relacao:'Fixa-se ao fêmur e ao calcanhar através do tendão de Aquiles.'},
+];
+
+/* ---------------- BIOLOGIA ---------------- */
+const BIOLOGIA = [
+{id:'celula',nome:'Célula',emoji:'🔬',resumo:'A menor unidade estrutural e funcional de todos os seres vivos.',
+ texto:'A célula é a unidade básica da vida. Todo ser vivo é formado por uma ou mais células, que realizam todas as funções necessárias para manter a vida: obtenção de energia, produção de proteínas, reprodução e resposta a estímulos. Existem células procarióticas (sem núcleo definido, como bactérias) e eucarióticas (com núcleo definido, como as células humanas).',
+ curiosidades:['O corpo humano tem entre 30 e 40 trilhões de células.','Algumas células, como os neurônios, podem viver por toda a vida da pessoa.']},
+{id:'dna',nome:'DNA',emoji:'🧬',resumo:'Molécula que armazena as informações genéticas dos seres vivos.',
+ texto:'O DNA (ácido desoxirribonucleico) é uma molécula em forma de dupla hélice que contém as instruções genéticas para o desenvolvimento e funcionamento de todos os seres vivos. Está organizado em genes, que codificam as proteínas responsáveis por praticamente todas as características do organismo.',
+ curiosidades:['Se todo o DNA de uma célula humana fosse esticado, teria cerca de 2 metros de comprimento.','Mais de 99% do DNA é idêntico entre todos os seres humanos.']},
+{id:'rna',nome:'RNA',emoji:'🧬',resumo:'Molécula que ajuda a traduzir as informações do DNA em proteínas.',
+ texto:'O RNA (ácido ribonucleico) atua como mensageiro entre o DNA e as estruturas que produzem proteínas na célula. Existem diferentes tipos de RNA, cada um com uma função específica no processo de leitura e execução das instruções genéticas.',
+ curiosidades:['Ao contrário do DNA, o RNA geralmente é uma fita simples, não dupla.','Alguns vírus, como o influenza, usam RNA em vez de DNA como material genético.']},
+{id:'genes',nome:'Genes',emoji:'🧬',resumo:'Trechos do DNA que carregam a informação para uma característica específica.',
+ texto:'Genes são segmentos específicos do DNA que contêm as instruções para produzir uma proteína ou controlar uma característica do organismo, como a cor dos olhos. Cada pessoa herda genes de ambos os pais, e a combinação deles determina muitas de suas características.',
+ curiosidades:['Estima-se que o genoma humano tenha entre 20 e 25 mil genes.']},
+{id:'cromossomos',nome:'Cromossomos',emoji:'🧬',resumo:'Estruturas que organizam o DNA dentro do núcleo da célula.',
+ texto:'Cromossomos são estruturas formadas por DNA compactado e organizado, visíveis principalmente durante a divisão celular. Eles garantem que o material genético seja corretamente distribuído entre as células-filhas.',
+ curiosidades:['Os seres humanos têm 46 cromossomos, organizados em 23 pares.','Um dos pares de cromossomos determina o sexo biológico (XX ou XY).']},
+{id:'tecidos',nome:'Tecidos',emoji:'🧫',resumo:'Conjuntos de células semelhantes que trabalham juntas com uma função comum.',
+ texto:'Um tecido é formado por um grupo de células com estrutura e função semelhantes, organizadas para realizar uma tarefa específica no corpo. Os principais tipos de tecido humano são o epitelial, o conjuntivo, o muscular e o nervoso.',
+ curiosidades:['O tecido conjuntivo é o mais abundante e variado do corpo, incluindo ossos, cartilagens e sangue.']},
+{id:'orgaos-bio',nome:'Órgãos',emoji:'🫀',resumo:'Estruturas formadas pela união de diferentes tecidos com uma função conjunta.',
+ texto:'Um órgão é formado pela combinação de dois ou mais tipos de tecido trabalhando juntos para desempenhar uma função específica no corpo, como o coração (tecido muscular, nervoso, conjuntivo) bombeando o sangue.',
+ curiosidades:['A pele é considerada o maior órgão do corpo humano.']},
+{id:'sistemas-bio',nome:'Sistemas',emoji:'🫁',resumo:'Conjuntos de órgãos que atuam juntos para realizar funções complexas do corpo.',
+ texto:'Um sistema do corpo é formado por diversos órgãos que cooperam para realizar uma função ampla, como a digestão ou a circulação. O corpo humano tem vários sistemas interligados que garantem seu funcionamento equilibrado.',
+ curiosidades:['O corpo depende da comunicação constante entre diferentes sistemas para manter o equilíbrio interno.']},
+{id:'homeostase',nome:'Homeostase',emoji:'⚖️',resumo:'Capacidade do corpo de manter um ambiente interno estável.',
+ texto:'Homeostase é o processo pelo qual o corpo regula suas condições internas, como temperatura, pH e níveis de glicose, mantendo-as dentro de limites saudáveis, mesmo diante de mudanças no ambiente externo.',
+ curiosidades:['O suor é um exemplo de mecanismo de homeostase para resfriar o corpo.']},
+{id:'metabolismo',nome:'Metabolismo',emoji:'🔥',resumo:'Conjunto de reações químicas que ocorrem nas células para manter a vida.',
+ texto:'O metabolismo inclui todas as reações químicas do corpo, divididas em catabolismo (quebra de moléculas para liberar energia) e anabolismo (construção de moléculas complexas usando energia). Ele é essencial para o crescimento, reparo e funcionamento das células.',
+ curiosidades:['A taxa metabólica basal varia entre pessoas devido a fatores genéticos, idade e composição corporal.']},
+{id:'reproducao-celular',nome:'Reprodução Celular',emoji:'🧫',resumo:'Processo pelo qual uma célula se divide para formar novas células.',
+ texto:'A reprodução celular permite o crescimento, a reparação de tecidos e, em organismos que se reproduzem sexualmente, a formação de gametas. Os dois principais tipos de divisão celular são a mitose e a meiose.',
+ curiosidades:['Uma célula do corpo humano se divide, em média, cerca de 50 a 70 vezes ao longo de sua vida.']},
+{id:'mitose',nome:'Mitose',emoji:'➗',resumo:'Divisão celular que gera duas células-filhas idênticas à célula original.',
+ texto:'A mitose é o processo pelo qual uma célula se divide em duas células geneticamente idênticas, cada uma com o mesmo número de cromossomos da célula original. É essencial para o crescimento e a reparação dos tecidos do corpo.',
+ curiosidades:['A pele e o revestimento do intestino estão entre os tecidos que mais realizam mitose para se renovar.']},
+{id:'meiose',nome:'Meiose',emoji:'➗',resumo:'Divisão celular que forma células reprodutivas com metade do número de cromossomos.',
+ texto:'A meiose ocorre na formação dos gametas (óvulos e espermatozoides) e resulta em células com metade do número de cromossomos da célula original. Isso garante que, na fecundação, o número correto de cromossomos seja restaurado.',
+ curiosidades:['A meiose também é responsável por gerar variabilidade genética entre indivíduos de uma mesma espécie.']},
+{id:'genetica',nome:'Genética',emoji:'🧬',resumo:'Ramo da biologia que estuda a hereditariedade e a variação entre os seres vivos.',
+ texto:'A genética estuda como características são transmitidas dos pais para os filhos através dos genes, além de investigar mutações, variações genéticas e como os genes influenciam o desenvolvimento e a saúde dos organismos.',
+ curiosidades:['Gregor Mendel é considerado o "pai da genética" por seus estudos pioneiros com ervilhas no século XIX.']},
+{id:'evolucao',nome:'Evolução',emoji:'🐒',resumo:'Processo de mudança gradual das características de uma espécie ao longo do tempo.',
+ texto:'A evolução biológica explica como as espécies mudam ao longo de gerações através da seleção natural, na qual características que favorecem a sobrevivência e reprodução tendem a se tornar mais comuns em uma população.',
+ curiosidades:['Charles Darwin propôs a teoria da seleção natural no livro "A Origem das Espécies", em 1859.']},
+{id:'microbiologia',nome:'Microbiologia',emoji:'🦠',resumo:'Ramo da biologia que estuda microrganismos como bactérias, vírus e fungos.',
+ texto:'A microbiologia estuda organismos microscópicos, muitos dos quais desempenham papéis importantes na saúde humana, tanto causando doenças quanto formando a microbiota que ajuda na digestão e na defesa do corpo.',
+ curiosidades:['O corpo humano abriga trilhões de microrganismos, principalmente no intestino, coletivamente chamados de microbiota.']},
+{id:'ecologia',nome:'Ecologia',emoji:'🌱',resumo:'Estudo das relações entre os seres vivos e o ambiente em que vivem.',
+ texto:'A ecologia investiga como organismos interagem entre si e com o ambiente físico, incluindo relações como predação, competição e simbiose, além do fluxo de energia e matéria em ecossistemas.',
+ curiosidades:['Todos os seres vivos, incluindo os humanos, fazem parte de teias alimentares e ecossistemas interligados.']},
+];
+const NIVEIS_ORGANIZACAO = ['celula','tecidos','orgaos-bio','sistemas-bio','organismo'];
+BIOLOGIA.push({id:'organismo',nome:'Organismo',emoji:'🧑',resumo:'Ser vivo completo, resultado da integração de todos os seus sistemas.',
+ texto:'Um organismo é um ser vivo individual e completo — como um ser humano — formado pela integração de todos os seus sistemas trabalhando juntos para manter a vida, crescer, se reproduzir e responder ao ambiente.',
+ curiosidades:['O corpo humano é um único organismo formado pela cooperação de trilhões de células organizadas em tecidos, órgãos e sistemas.']});
+
+/* ---------------- QUIZ ---------------- */
+const QUIZZES = {
+ iniciante:[
+  {q:'Qual é a principal função do coração?',opts:['Digerir alimentos','Bombear sangue pelo corpo','Produzir hormônios do crescimento','Filtrar o ar que respiramos'],r:1,exp:'O coração bombeia o sangue, levando oxigênio e nutrientes a todas as partes do corpo.'},
+  {q:'Onde ficam os pulmões?',opts:['No abdômen','Na cabeça','No tórax','Na pelve'],r:2,exp:'Os pulmões ficam no tórax, protegidos pela caixa torácica, um de cada lado do coração.'},
+  {q:'Qual é o maior órgão do corpo humano?',opts:['Fígado','Cérebro','Pele','Coração'],r:2,exp:'A pele é considerada o maior órgão do corpo humano em área e peso.'},
+  {q:'Qual órgão é responsável por filtrar o sangue e produzir a urina?',opts:['Fígado','Rins','Estômago','Pulmões'],r:1,exp:'Os rins filtram o sangue continuamente, removendo resíduos e produzindo urina.'},
+  {q:'Quantos ossos tem o esqueleto de um adulto, aproximadamente?',opts:['106','206','306','406'],r:1,exp:'O esqueleto humano adulto tem 206 ossos.'},
+ ],
+ intermediario:[
+  {q:'Qual estrutura do encéfalo é responsável pelo equilíbrio e coordenação motora?',opts:['Cerebelo','Hipófise','Tálamo','Bulbo'],r:0,exp:'O cerebelo coordena os movimentos voluntários e o equilíbrio.'},
+  {q:'Qual órgão participa da digestão liberando enzimas E também produz insulina?',opts:['Fígado','Vesícula biliar','Pâncreas','Baço'],r:2,exp:'O pâncreas tem função exócrina (enzimas digestivas) e endócrina (insulina e glucagon).'},
+  {q:'Onde ocorre a maior parte da absorção de nutrientes dos alimentos?',opts:['Estômago','Intestino delgado','Intestino grosso','Esôfago'],r:1,exp:'O intestino delgado, com suas vilosidades, é o principal local de absorção de nutrientes.'},
+  {q:'Qual glândula é chamada de "glândula mestra" por controlar outras glândulas?',opts:['Tireoide','Suprarrenal','Hipófise','Paratireoide'],r:2,exp:'A hipófise regula a atividade de várias outras glândulas endócrinas do corpo.'},
+  {q:'Qual é a unidade filtrante presente nos rins?',opts:['Alvéolo','Néfron','Neurônio','Vilosidade'],r:1,exp:'Cada rim contém cerca de 1 milhão de néfrons, responsáveis pela filtração do sangue.'},
+ ],
+ avancado:[
+  {q:'Qual tipo de divisão celular forma gametas com metade do número de cromossomos?',opts:['Mitose','Meiose','Fagocitose','Osmose'],r:1,exp:'A meiose reduz o número de cromossomos pela metade, formando óvulos e espermatozoides.'},
+  {q:'Qual sistema é responsável pela maturação dos linfócitos T?',opts:['Sistema linfático (timo)','Sistema digestório','Sistema urinário','Sistema tegumentar'],r:0,exp:'O timo, parte do sistema linfático, é onde os linfócitos T amadurecem.'},
+  {q:'Qual estrutura óssea protege a medula espinhal?',opts:['Esterno','Coluna vertebral','Pelve','Escápula'],r:1,exp:'A coluna vertebral envolve e protege a medula espinhal ao longo de todo o tronco.'},
+  {q:'Qual molécula carrega as instruções genéticas e tem formato de dupla hélice?',opts:['RNA','ATP','DNA','Colágeno'],r:2,exp:'O DNA é a molécula em dupla hélice que armazena as instruções genéticas dos seres vivos.'},
+  {q:'Qual hormônio das glândulas suprarrenais prepara o corpo para reações de "luta ou fuga"?',opts:['Insulina','Adrenalina','Melatonina','Paratormônio'],r:1,exp:'A adrenalina, liberada pela medula das suprarrenais, prepara o corpo para reagir rapidamente ao estresse.'},
+ ],
+};
+
+/* =========================================================================
+   ILUSTRAÇÕES (SVG esquemáticas educativas, geradas por categoria)
+   ========================================================================= */
+const THEME_HEX = {
+  dark: {red:'#f2685c',cyan:'#3fd7e0',blue:'#4c8dff',amber:'#f2b84b',green:'#3ee08a',violet:'#9b8cff',pink:'#ef6fa8',text:'#a8b6cf'},
+  light:{red:'#cf4436',cyan:'#0891a8',blue:'#2f5fd6',amber:'#b3760a',green:'#12925a',violet:'#6a56d6',pink:'#c14a83',text:'#41567a'},
+};
+function colorFor(key){ const t = THEME_HEX[state.theme] ? state.theme : 'dark'; return THEME_HEX[t][key] || THEME_HEX[t].cyan; }
+function organIllustration(o,size){ return shapeSVG(o.shape||'blob', colorFor(o.cor), size); }
+function boneSVG(size){ return shapeSVG('bone', colorFor('text'), size); }
+function muscleSVG(size){ return shapeSVG('muscle', colorFor('red'), size); }
+function sysIcon(sysId){
+  const s = SISTEMAS.find(x=>x.id===sysId);
+  const map={nervoso:'brain',cardiovascular:'heart',respiratorio:'lung',digestorio:'tube',urinario:'blob',esqueletico:'bone',muscular:'muscle',endocrino:'gland',linfatico:'blob',imunologico:'joint',reprodutor:'gland',tegumentar:'skin','orgaos-sentidos':'eye'};
+  return shapeSVG(map[sysId]||'blob', colorFor(s?s.cor:'cyan'),'100%');
+}
+let __svgIdCounter = 0;
+function shapeSVG(shape,colorVar,size){
+  size = size||'100%';
+  const c = colorVar;
+  const gid = 'grad'+(__svgIdCounter++);
+  const isPct = String(size).indexOf('%')>=0;
+  const styleDim = isPct ? 'width:100%;height:auto;' : ('width:'+size+'px;height:'+size+'px;');
+  const wrap = (inner)=>{
+    const svgMarkup = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">'
+      + '<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+c+'" stop-opacity=".95"/><stop offset="1" stop-color="'+c+'" stop-opacity=".55"/></linearGradient></defs>'
+      + inner.split('url(#g)').join('url(#'+gid+')')
+      + '</svg>';
+    const encoded = encodeURIComponent(svgMarkup);
+    return '<img src="data:image/svg+xml,'+encoded+'" alt="Ilustração esquemática educativa" style="'+styleDim+'display:block;flex-shrink:0;" />';
+  };
+  switch(shape){
+    case 'brain': return wrap(`<path d="M40 30c-10-8-26-2-26 12 0 6 3 10 3 10-6 4-8 14-2 20 2 10 14 16 24 12 4 4 12 4 16 0 10 4 22-2 24-12 6-6 4-16-2-20 0 0 3-4 3-10 0-14-16-20-26-12-4-4-10-4-14 0Z" fill="url(#g)" stroke="${c}" stroke-width="2"/><path d="M40 40q6 6 0 12M52 34q6 8 0 16M64 40q-6 6 0 12M52 62q6 6 0 12M64 62q6 4 0 10" fill="none" stroke="#04141a" stroke-opacity=".35" stroke-width="2"/>`);
+    case 'heart': return wrap(`<path d="M60 100S22 74 22 46a19 19 0 0 1 38-6 19 19 0 0 1 38 6c0 28-38 54-38 54Z" fill="url(#g)" stroke="${c}" stroke-width="2"/><path d="M46 40l6 10-8 6 10 12" fill="none" stroke="#04141a" stroke-opacity=".35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`);
+    case 'lung': return wrap(`<path d="M55 20v22c-10-10-30-6-30 14 0 18 12 32 22 32 5 0 8-4 8-10V20Z" fill="url(#g)" stroke="${c}" stroke-width="2"/><path d="M65 20v22c10-10 30-6 30 14 0 18-12 32-22 32-5 0-8-4-8-10V20Z" fill="url(#g)" stroke="${c}" stroke-width="2"/><path d="M60 14v10" stroke="${c}" stroke-width="3" stroke-linecap="round"/>`);
+    case 'bone': return wrap(`<path d="M28 28a9 9 0 1 1 12 8l32 32a9 9 0 1 1-8 12 9 9 0 0 1-4-13l-32-32a9 9 0 0 1-12-4 9 9 0 0 1 12-3Z" fill="url(#g)" stroke="${c}" stroke-width="2"/><path d="M76 92a9 9 0 1 0 8-12" fill="none" stroke="${c}" stroke-width="2"/>`);
+    case 'muscle': return wrap(`<path d="M30 80c0-30 8-52 30-52s30 22 30 52c-8 6-16-6-16 4 0 8-28 8-28 0 0-10-8 2-16-4Z" fill="url(#g)" stroke="${c}" stroke-width="2"/><path d="M42 42q6 14 0 30M60 36v42M78 42q-6 14 0 30" fill="none" stroke="#04141a" stroke-opacity=".3" stroke-width="2"/>`);
+    case 'tube': return wrap(`<path d="M40 18c-14 4-14 20 0 24-14 4-14 20 0 24-14 4-14 20 0 24-14 4-14 12 0 16M80 18c14 4 14 20 0 24 14 4 14 20 0 24 14 4 14 20 0 24 14 4 14 12 0 16" fill="none" stroke="url(#g)" stroke-width="7" stroke-linecap="round"/>`);
+    case 'gland': return wrap(`<ellipse cx="60" cy="60" rx="28" ry="22" fill="url(#g)" stroke="${c}" stroke-width="2"/><circle cx="48" cy="54" r="5" fill="#04141a" fill-opacity=".3"/><circle cx="70" cy="58" r="6" fill="#04141a" fill-opacity=".3"/><circle cx="58" cy="70" r="4" fill="#04141a" fill-opacity=".3"/>`);
+    case 'eye': return wrap(`<path d="M14 60S34 30 60 30s46 30 46 30-20 30-46 30S14 60 14 60Z" fill="url(#g)" stroke="${c}" stroke-width="2"/><circle cx="60" cy="60" r="16" fill="#04141a" fill-opacity=".5"/><circle cx="60" cy="60" r="7" fill="#04141a"/>`);
+    case 'ear': return wrap(`<path d="M50 100c-20-4-30-24-24-44 5-18 22-30 38-24 14 5 20 20 14 32-4 8-14 8-16 2-2-6 4-10 0-16" fill="url(#g)" stroke="${c}" stroke-width="2"/>`);
+    case 'skin': return wrap(`<rect x="18" y="24" width="84" height="72" rx="14" fill="url(#g)" stroke="${c}" stroke-width="2"/><circle cx="40" cy="46" r="3" fill="#04141a" fill-opacity=".3"/><circle cx="66" cy="40" r="3" fill="#04141a" fill-opacity=".3"/><circle cx="82" cy="60" r="3" fill="#04141a" fill-opacity=".3"/><circle cx="52" cy="72" r="3" fill="#04141a" fill-opacity=".3"/><circle cx="30" cy="78" r="3" fill="#04141a" fill-opacity=".3"/>`);
+    case 'vessel': return wrap(`<path d="M20 30q40 0 40 30t40 30" fill="none" stroke="url(#g)" stroke-width="10" stroke-linecap="round"/><circle cx="20" cy="30" r="6" fill="${c}"/><circle cx="100" cy="90" r="6" fill="${c}"/>`);
+    case 'spine': return wrap(`<rect x="52" y="14" width="16" height="10" rx="3" fill="url(#g)" stroke="${c}"/><rect x="50" y="28" width="20" height="10" rx="3" fill="url(#g)" stroke="${c}"/><rect x="48" y="42" width="24" height="10" rx="3" fill="url(#g)" stroke="${c}"/><rect x="46" y="56" width="28" height="10" rx="3" fill="url(#g)" stroke="${c}"/><rect x="46" y="70" width="28" height="10" rx="3" fill="url(#g)" stroke="${c}"/><rect x="48" y="84" width="24" height="10" rx="3" fill="url(#g)" stroke="${c}"/><rect x="50" y="98" width="20" height="10" rx="3" fill="url(#g)" stroke="${c}"/>`);
+    case 'joint': return wrap(`<circle cx="45" cy="45" r="22" fill="url(#g)" stroke="${c}" stroke-width="2"/><circle cx="75" cy="75" r="22" fill="url(#g)" stroke="${c}" stroke-width="2" fill-opacity=".6"/><circle cx="60" cy="60" r="10" fill="#04141a" fill-opacity=".35"/>`);
+    default: return wrap(`<circle cx="60" cy="60" r="38" fill="url(#g)" stroke="${c}" stroke-width="2"/>`);
+  }
+}
+
+
+/* =========================================================================
+   ESTADO / PERSISTÊNCIA (localStorage — por navegador/visitante)
+   ========================================================================= */
+const LS_KEY='ah360_state_v1';
+function loadState(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return {favorites:[],visited:[],theme:'dark',quizScores:{}};
+}
+function saveState(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){} }
+let state = loadState();
+if(!state.favorites) state.favorites=[];
+if(!state.visited) state.visited=[];
+if(!state.quizScores) state.quizScores={};
+document.documentElement.setAttribute('data-theme', state.theme||'dark');
+
+function markVisited(id){ if(!state.visited.includes(id)){ state.visited.push(id); saveState(); } }
+function toggleFav(id){ 
+  const i = state.favorites.indexOf(id);
+  if(i>=0) state.favorites.splice(i,1); else state.favorites.push(id);
+  saveState(); render();
+}
+function isFav(id){ return state.favorites.includes(id); }
+
+const TOTAL_TRACKABLE = ORGAOS.length + OSSOS.length + MUSCULOS.length + BIOLOGIA.length;
+function progressPct(){ return Math.min(100, Math.round((new Set(state.visited).size / TOTAL_TRACKABLE) * 100)); }
+
+/* =========================================================================
+   ROTEAMENTO
+   ========================================================================= */
+let route = {page:'home'};
+
+function go(page, params){ route = Object.assign({page}, params||{}); window.scrollTo({top:0,behavior:'instant'}); render(); }
+
+/* helper lookups */
+function findOrgao(id){ return ORGAOS.find(o=>o.id===id); }
+function findSistema(id){ return SISTEMAS.find(s=>s.id===id); }
+function findOsso(id){ return OSSOS.find(o=>o.id===id); }
+function findMusculo(id){ return MUSCULOS.find(o=>o.id===id); }
+function findBio(id){ return BIOLOGIA.find(o=>o.id===id); }
+
+/* fuzzy-ish search across everything */
+function buildSearchIndex(){
+  const idx=[];
+  ORGAOS.forEach(o=>idx.push({type:'Estrutura',label:o.nome,id:o.id,go:['organ',{id:o.id}]}));
+  SISTEMAS.forEach(s=>idx.push({type:'Sistema',label:s.nome,id:s.id,go:['system',{id:s.id}]}));
+  OSSOS.forEach(o=>idx.push({type:'Osso',label:o.nome,id:o.id,go:['bone',{id:o.id}]}));
+  MUSCULOS.forEach(o=>idx.push({type:'Músculo',label:o.nome,id:o.id,go:['muscle',{id:o.id}]}));
+  BIOLOGIA.forEach(o=>idx.push({type:'Biologia',label:o.nome,id:o.id,go:['bio',{id:o.id}]}));
+  REGIOES.forEach(o=>idx.push({type:'Região',label:o.nome,id:o.id,go:['region',{id:o.id}]}));
+  return idx;
+}
+const SEARCH_INDEX = buildSearchIndex();
+function doSearch(q){
+  q = q.trim().toLowerCase();
+  if(!q) return [];
+  return SEARCH_INDEX.filter(it=> it.label.toLowerCase().includes(q) ).slice(0,10);
+}
+
+/* =========================================================================
+   RENDER — SHELL
+   ========================================================================= */
+const NAV_ITEMS = [
+  {id:'home',label:'Início',icon:'home'},
+  {id:'explorer',label:'Explorar',icon:'body'},
+  {id:'systems',label:'Sistemas',icon:'systems'},
+  {id:'biology',label:'Biologia',icon:'biology'},
+  {id:'quiz',label:'Quiz',icon:'quiz'},
+  {id:'favorites',label:'Favoritos',icon:'star'},
+];
+const activeTopId = ()=>{
+  if(['organ','bone','muscle'].includes(route.page)) return 'explorer';
+  if(route.page==='system') return 'systems';
+  if(route.page==='bio') return 'biology';
+  if(route.page==='quizplay' || route.page==='quizresult') return 'quiz';
+  return route.page;
+};
+
+function render(){
+  const app = document.getElementById('app');
+  const active = activeTopId();
+  app.innerHTML = `
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">${shapeSVG('heart',colorFor('cyan'),'38')}</div>
+        <div class="brand-text"><b>Anatomia Humana</b><span>360°</span></div>
+      </div>
+      <nav class="nav-list">
+        ${NAV_ITEMS.map(n=>`<button class="nav-item ${active===n.id?'active':''}" data-nav="${n.id}">${icon(n.icon)}<span>${n.label}</span></button>`).join('')}
+      </nav>
+      <div class="sidebar-foot">
+        <div class="progress-mini">
+          <div class="lbl"><span>PROGRESSO</span><span>${progressPct()}%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:${progressPct()}%"></div></div>
+        </div>
+        <button class="theme-toggle" data-theme-toggle><span>Modo escuro</span><div class="switch"><i></i></div></button>
+      </div>
+    </aside>
+    <main>
+      <div class="topbar-mobile">
+        <div class="brand">
+          <div class="brand-mark">${shapeSVG('heart',colorFor('cyan'),'30')}</div>
+          <div class="brand-text"><b style="font-size:14px">Anatomia 360</b></div>
+        </div>
+        <button class="theme-toggle" data-theme-toggle style="padding:7px 10px;"><div class="switch"><i></i></div></button>
+      </div>
+      <div id="page"></div>
+    </main>
+    <nav class="bottom-nav">
+      ${NAV_ITEMS.slice(0,5).map(n=>`<button class="bn-item ${active===n.id?'active':''}" data-nav="${n.id}">${icon(n.icon)}<span>${n.label}</span></button>`).join('')}
+    </nav>
+  `;
+  renderPage();
+}
+
+/* =========================================================================
+   RENDER — PÁGINAS
+   ========================================================================= */
+function renderPage(){
+  const el = document.getElementById('page');
+  switch(route.page){
+    case 'home': el.innerHTML = pageHome(); startFactRotation(); break;
+    case 'explorer': el.innerHTML = pageExplorer(); break;
+    case 'systems': el.innerHTML = pageSystems(); break;
+    case 'system': el.innerHTML = pageSystemDetail(route.id); break;
+    case 'organ': el.innerHTML = pageOrganDetail(route.id); break;
+    case 'bone': el.innerHTML = pageBoneDetail(route.id); break;
+    case 'muscle': el.innerHTML = pageMuscleDetail(route.id); break;
+    case 'region': el.innerHTML = pageRegionDetail(route.id); break;
+    case 'biology': el.innerHTML = pageBiology(); break;
+    case 'bio': el.innerHTML = pageBioDetail(route.id); break;
+    case 'quiz': el.innerHTML = pageQuizHome(); break;
+    case 'quizplay': el.innerHTML = pageQuizPlay(); break;
+    case 'quizresult': el.innerHTML = pageQuizResult(); break;
+    case 'favorites': el.innerHTML = pageFavorites(); break;
+    default: el.innerHTML = pageHome(); startFactRotation();
+  }
+}
+
+function bindCards(){
+  document.querySelectorAll('[data-go]').forEach(c=>{
+    c.addEventListener('click', (e)=>{
+      if(e.target.closest('.fav-btn')) return;
+      const [page,id] = c.dataset.go.split(':');
+      go(page,{id});
+    });
+  });
+}
+function bindFav(){
+  document.querySelectorAll('.fav-btn').forEach(b=>{
+    b.addEventListener('click', (e)=>{ e.stopPropagation(); toggleFav(b.dataset.fav); });
+  });
+}
+function bindGenericSearch(inputId, onSelectGoSystem){
+  // placeholder for future use
+}
+let __factInterval = null;
+function startFactRotation(){
+  if(__factInterval) clearInterval(__factInterval);
+  __factInterval = setInterval(()=>{
+    if(route.page!=='home') return;
+    factIndex = (factIndex+1) % FACTS.length;
+    const t = document.getElementById('factText');
+    if(t){ t.textContent = FACTS[factIndex]; const d=document.getElementById('factDots'); if(d) d.innerHTML = FACTS.map((_,i)=>`<div class="dot ${i===factIndex?'active':''}"></div>`).join(''); }
+  }, 6000);
+}
+
+/* ---- HOME ---- */
+const FACTS = [
+  'O coração humano bate cerca de 100 mil vezes por dia, bombeando aproximadamente 7.500 litros de sangue.',
+  'O corpo humano é formado por trilhões de células, todas originadas de uma única célula após a fecundação.',
+  'Os ossos são tecidos vivos que se remodelam continuamente ao longo da vida.',
+  'O cérebro humano tem cerca de 86 bilhões de neurônios conectados entre si.',
+  'A pele se renova completamente a cada 4 a 6 semanas, aproximadamente.',
+];
+let factIndex = 0;
+function pageHome(){
+  const sys = SISTEMAS.slice(0,6);
+  return `
+  <div class="hero">
+    <div>
+      <div class="eyebrow">ENCICLOPÉDIA DIGITAL DE ANATOMIA</div>
+      <h1 style="margin-top:8px">Explore o corpo <span>humano</span> por dentro</h1>
+      <p>Descubra como órgãos, ossos, músculos e sistemas trabalham juntos. Toque em qualquer estrutura para aprender onde fica, o que faz e por que é importante.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" data-nav="explorer">${icon('body')} Explorar o corpo humano</button>
+        <button class="btn btn-outline" data-nav="systems">${icon('systems')} Sistemas do corpo</button>
+        <button class="btn btn-outline" data-nav="biology">${icon('biology')} Aprender biologia</button>
+      </div>
+    </div>
+    <div class="hero-figure">${shapeSVG('joint',colorFor('cyan'),'100%')}</div>
+  </div>
+
+  <div class="searchbar" style="margin-top:24px;">
+    ${icon('search')}
+    <input id="homeSearch" type="text" placeholder="Pesquisar uma parte do corpo..." autocomplete="off">
+  </div>
+  <div class="search-results"><div id="homeSearchResults"></div></div>
+
+  <div class="facts-card">
+    <h3>${icon('fact')} Você sabia?</h3>
+    <p id="factText">${FACTS[factIndex]}</p>
+    <div class="facts-nav" id="factDots">${FACTS.map((_,i)=>`<div class="dot ${i===factIndex?'active':''}"></div>`).join('')}</div>
+  </div>
+
+  <div class="section-title"><h2>Sistemas do corpo</h2><button class="see-all" data-nav="systems">ver todos ${icon('arrowRight')}</button></div>
+  <div class="grid cols-3">
+    ${sys.map(s=>`
+      <button class="card sys-card" data-go="system:${s.id}">
+        <div class="card-icon">${sysIcon(s.id)}</div>
+        <h3>${s.nome}</h3>
+        <p class="card-desc">${s.funcao}</p>
+      </button>`).join('')}
+  </div>
+
+  <div class="section-title"><h2>Continue explorando</h2></div>
+  <div class="grid cols-4">
+    ${['cerebro','coracao','pulmoes','estomago'].map(id=>{const o=findOrgao(id); return organCard(o);}).join('')}
+  </div>
+  `;
+}
+function organCard(o){
+  if(!o) return '';
+  return `<div class="card" role="button" tabindex="0" data-go="organ:${o.id}">
+    <button class="fav-btn ${isFav(o.id)?'active':''}" data-fav="${o.id}">${icon('star')}</button>
+    <div class="card-icon">${organIllustration(o,'100%')}</div>
+    <h3>${o.nome}</h3>
+    <span class="card-sub">${findSistema(o.sistema)?findSistema(o.sistema).nome:''}</span>
+    <p class="card-desc">${o.funcao}</p>
+  </div>`;
+}
+
+/* ---- EXPLORER ---- */
+function pageExplorer(){
+  const step = route.region ? 2 : 1;
+  return `
+  <div class="page-head">
+    <div class="eyebrow">EXPLORADOR DE ANATOMIA</div>
+    <h1>Explore por região do corpo</h1>
+    <p>Escolha uma região para descobrir quais estruturas anatômicas estão localizadas ali.</p>
+  </div>
+  <div class="searchbar"><span></span>${icon('search')}<input id="expSearch" placeholder="Pesquisar uma parte do corpo..." autocomplete="off"></div>
+  <div class="search-results"><div id="expSearchResults"></div></div>
+  <div class="section-title mb-0"><h2>Regiões do corpo</h2></div>
+  <div class="grid cols-4" style="margin-top:14px;">
+    ${REGIOES.map(r=>`<button class="card" data-go="region:${r.id}"><div class="card-icon">${icon('location','')}</div><h3>${r.nome}</h3><span class="card-sub">${r.orgaos.length} estruturas</span></button>`).join('')}
+  </div>
+  `;
+}
+
+function crumbBar(items){
+  // items: [{label, page, id}] last one is current (no click)
+  return `<div class="crumb">${items.map((it,i)=>{
+    const isLast = i===items.length-1;
+    return (i>0?`<span>›</span>`:'') + (isLast ? `<span style="color:var(--cyan);font-weight:600;">${it.label}</span>` : `<button data-crumb="${it.page}:${it.id||''}">${it.label}</button>`);
+  }).join('')}</div>`;
+}
+function bindCrumbs(){
+  document.querySelectorAll('[data-crumb]').forEach(b=>{
+    b.addEventListener('click', ()=>{ const [p,id]=b.dataset.crumb.split(':'); go(p, id?{id}:{}); });
+  });
+}
+
+function pageRegionDetail(id){
+  const r = REGIOES.find(x=>x.id===id);
+  if(!r) return `<p>Região não encontrada.</p>`;
+  return `
+  ${crumbBar([{label:'Explorar',page:'explorer'},{label:r.nome}])}
+  <div class="page-head"><h1>${r.nome}</h1><p>Estruturas anatômicas localizadas nesta região do corpo.</p></div>
+  <div class="grid cols-4">
+    ${r.orgaos.map(oid=>{
+      const o = findOrgao(oid); if(o) return organCard(o);
+      const b = OSSOS.find(x=>x.id===oid); if(b) return boneCard(b);
+      return '';
+    }).join('')}
+  </div>
+  `;
+}
+
+/* ---- SYSTEMS ---- */
+function pageSystems(){
+  return `
+  <div class="page-head">
+    <div class="eyebrow">SISTEMAS DO CORPO HUMANO</div>
+    <h1>Sistemas do corpo</h1>
+    <p>Os 13 grandes sistemas que compõem o corpo humano e mantêm tudo funcionando em harmonia.</p>
+  </div>
+  <div class="grid cols-3">
+    ${SISTEMAS.map(s=>`
+      <button class="card sys-card" data-go="system:${s.id}">
+        <div class="card-icon">${sysIcon(s.id)}</div>
+        <h3>${s.nome}</h3>
+        <p class="card-desc">${s.funcao}</p>
+        <span class="chip">${s.orgaos.length} estruturas</span>
+      </button>`).join('')}
+  </div>
+  `;
+}
+function pageSystemDetail(id){
+  const s = findSistema(id);
+  if(!s) return `<p>Sistema não encontrado.</p>`;
+  markVisited(s.id);
+  const relacionados = s.relacionados.map(rid=>findSistema(rid)).filter(Boolean);
+  return `
+  ${crumbBar([{label:'Sistemas',page:'systems'},{label:s.nome}])}
+  <div class="detail-layout">
+    <div class="detail-figure">
+      <div style="width:140px;height:140px;">${sysIcon(s.id)}</div>
+      <h2>${s.nome}</h2>
+    </div>
+    <div class="info-blocks">
+      <div class="info-block"><div class="ib-head">${icon('function')}<h4>FUNÇÃO DO SISTEMA</h4></div><p>${s.funcao}</p></div>
+      <div class="info-block"><div class="ib-head">${icon('gear')}<h4>COMO AS PARTES TRABALHAM JUNTAS</h4></div><p>${s.comoFuncionam}</p></div>
+      <div class="info-block"><div class="ib-head">${icon('importance')}<h4>POR QUE É IMPORTANTE</h4></div><p>${s.importancia}</p></div>
+      <div class="info-block"><div class="ib-head">${icon('fact')}<h4>CURIOSIDADES</h4></div><ul>${s.curiosidades.map(c=>`<li>${c}</li>`).join('')}</ul></div>
+      ${relacionados.length?`<div class="info-block"><div class="ib-head">${icon('link')}<h4>RELAÇÃO COM OUTROS SISTEMAS</h4></div>
+        <div class="related-row">${relacionados.map(r=>`<button class="related-pill" data-go="system:${r.id}"><span style="width:22px;height:22px;display:inline-block;">${sysIcon(r.id)}</span>${r.nome}</button>`).join('')}</div></div>`:''}
+      <div class="section-title mb-0" style="margin-top:6px"><h2>Principais órgãos e estruturas</h2></div>
+      <div class="grid cols-2">${s.orgaos.map(oid=>organCard(findOrgao(oid))).join('') || '<p style="color:var(--text-faint);font-size:13.5px;">Consulte a seção de Biologia para mais detalhes sobre este sistema.</p>'}</div>
+    </div>
+  </div>
+  `;
+}
+
+/* ---- ORGAN DETAIL ---- */
+function pageOrganDetail(id){
+  const o = findOrgao(id);
+  if(!o) return `<p>Estrutura não encontrada.</p>`;
+  markVisited(o.id);
+  const sys = findSistema(o.sistema);
+  const relacionados = (o.relacionados||[]).map(rid=>findSistema(rid)).filter(Boolean);
+  return `
+  ${crumbBar([{label:'Explorar',page:'explorer'},{label:sys?sys.nome:'Estrutura',page:'system',id:sys?sys.id:''},{label:o.nome}])}
+  <div class="detail-layout">
+    <div class="detail-figure">
+      <div style="width:150px;height:150px;">${organIllustration(o,'100%')}</div>
+      <h2>${o.nome}</h2>
+      ${o.cientifico?`<span class="sci">${o.cientifico}</span>`:''}
+      <div class="detail-actions">
+        <button class="btn btn-outline fav-btn-detail" id="favDetail" data-fav="${o.id}">${icon('star')} ${isFav(o.id)?'Favoritado':'Favoritar'}</button>
+      </div>
+    </div>
+    <div class="info-blocks">
+      <div class="info-block"><div class="ib-head">${icon('location')}<h4>ONDE FICA</h4></div><p>${o.onde}</p></div>
+      <div class="info-block"><div class="ib-head">${icon('function')}<h4>O QUE FAZ</h4></div><p>${o.funcao}</p></div>
+      <div class="info-block"><div class="ib-head">${icon('importance')}<h4>POR QUE É IMPORTANTE</h4></div><p>${o.importancia}</p></div>
+      <div class="info-block"><div class="ib-head">${icon('gear')}<h4>COMO FUNCIONA</h4></div><p>${o.comoFunciona}</p></div>
+      <div class="info-block"><div class="ib-head">${icon('link')}<h4>SISTEMAS RELACIONADOS</h4></div>
+        <div class="related-row">${relacionados.map(r=>`<button class="related-pill" data-go="system:${r.id}"><span style="width:22px;height:22px;display:inline-block;">${sysIcon(r.id)}</span>${r.nome}</button>`).join('')}</div></div>
+      <div class="info-block"><div class="ib-head">${icon('fact')}<h4>CURIOSIDADES</h4></div><ul>${(o.curiosidades||[]).map(c=>`<li>${c}</li>`).join('')}</ul></div>
+    </div>
+  </div>
+  `;
+}
+
+/* ---- SKELETAL SYSTEM DETAIL ---- */
+function boneCard(b){
+  return `<button class="card" data-go="bone:${b.id}">
+    <div class="card-icon">${boneSVG('100%')}</div>
+    <h3>${b.nome}</h3>
+    <span class="card-sub">${b.regiao}</span>
+    <p class="card-desc">${b.funcao}</p>
+  </button>`;
+}
+function pageBoneDetail(id){
+  const b = findOsso(id);
+  if(!b) return `<p>Osso não encontrado.</p>`;
+  markVisited(b.id);
+  return `
+  ${crumbBar([{label:'Sistemas',page:'systems'},{label:'Sistema Esquelético',page:'system',id:'esqueletico'},{label:b.nome}])}
+  <div class="detail-layout">
+    <div class="detail-figure">
+      <div style="width:150px;height:150px;">${boneSVG('100%')}</div>
+      <h2>${b.nome}</h2>
+      <span class="chip">${b.regiao}</span>
+    </div>
+    <div class="info-blocks">
+      <div class="info-block"><div class="ib-head">${icon('location')}<h4>LOCALIZAÇÃO</h4></div><p>${b.onde}</p></div>
+      <div class="info-block"><div class="ib-head">${icon('function')}<h4>FUNÇÃO</h4></div><p>${b.funcao}</p></div>
+      <div class="info-block"><div class="ib-head">${icon('link')}<h4>RELAÇÃO COM ARTICULAÇÕES E MÚSCULOS</h4></div><p>${b.relacao}</p></div>
+      <div class="info-block"><div class="ib-head">${icon('fact')}<h4>CURIOSIDADE</h4></div><p>${b.curiosidade}</p></div>
+    </div>
+  </div>
+  <div class="section-title"><h2>Outros ossos do esqueleto</h2></div>
+  <div class="grid cols-4">${OSSOS.filter(x=>x.id!==id).slice(0,8).map(boneCard).join('')}</div>
+  `;
+}
+
+/* ---- MUSCULAR SYSTEM DETAIL ---- */
+function muscleCard(m){
+  return `<button class="card" data-go="muscle:${m.id}">
+    <div class="card-icon">${muscleSVG('100%')}</div>
+    <h3>${m.nome}</h3>
+    <p class="card-desc">${m.funcao}</p>
+  </button>`;
+}
+function pageMuscleDetail(id){
+  const m = findMusculo(id);
+  if(!m) return `<p>Músculo não encontrado.</p>`;
+  markVisited(m.id);
+  return `
+  ${crumbBar([{label:'Sistemas',page:'systems'},{label:'Sistema Muscular',page:'system',id:'muscular'},{label:m.nome}])}
+  <div class="detail-layout">
+    <div class="detail-figure">
+      <div style="width:150px;height:150px;">${muscleSVG('100%')}</div>
+      <h2>${m.nome}</h2>
+    </div>
+    <div class="info-blocks">
+      <div class="info-block"><div class="ib-head">${icon('location')}<h4>LOCALIZAÇÃO</h4></div><p>${m.onde}</p></div>
+      <div class="info-block"><div class="ib-head">${icon('function')}<h4>MOVIMENTO / FUNÇÃO PRINCIPAL</h4></div><p>${m.funcao}</p></div>
+      <div class="info-block"><div class="ib-head">${icon('link')}<h4>RELAÇÃO COM OSSOS E ARTICULAÇÕES</h4></div><p>${m.relacao}</p></div>
+    </div>
+  </div>
+  <div class="section-title"><h2>Outros músculos</h2></div>
+  <div class="grid cols-4">${MUSCULOS.filter(x=>x.id!==id).slice(0,8).map(muscleCard).join('')}</div>
+  `;
+}
+
+/* ---- BIOLOGY ---- */
+function pageBiology(){
+  return `
+  <div class="page-head">
+    <div class="eyebrow">BIOLOGIA</div>
+    <h1>Fundamentos da Biologia</h1>
+    <p>Os conceitos biológicos por trás do funcionamento do corpo humano e de todos os seres vivos.</p>
+  </div>
+
+  <div class="section-title mb-0"><h2>Níveis de organização da vida</h2></div>
+  <p style="color:var(--text-dim);font-size:13.5px;margin-top:6px;">Clique em cada nível para entender o que ele representa.</p>
+  <div class="levels-row">
+    ${NIVEIS_ORGANIZACAO.map((id,i)=>{
+      const b = findBio(id);
+      return (i>0?`<div class="level-arrow">${icon('chevronR')}</div>`:'') +
+      `<button class="level-node ${route.levelSel===id?'active':''}" data-level="${id}"><div style="font-size:28px;">${b.emoji}</div><b style="font-size:13px;">${b.nome}</b></button>`;
+    }).join('')}
+  </div>
+  <div id="levelInfo"></div>
+
+  <div class="section-title"><h2>Temas de biologia</h2></div>
+  <div class="grid cols-3">
+    ${BIOLOGIA.filter(b=>b.id!=='organismo').map(b=>`
+      <button class="card" data-go="bio:${b.id}">
+        <div style="font-size:32px;">${b.emoji}</div>
+        <h3>${b.nome}</h3>
+        <p class="card-desc">${b.resumo}</p>
+      </button>`).join('')}
+  </div>
+  `;
+}
+function pageBioDetail(id){
+  const b = findBio(id);
+  if(!b) return `<p>Tema não encontrado.</p>`;
+  markVisited(b.id);
+  return `
+  ${crumbBar([{label:'Biologia',page:'biology'},{label:b.nome}])}
+  <div class="detail-layout">
+    <div class="detail-figure">
+      <div style="font-size:70px;">${b.emoji}</div>
+      <h2>${b.nome}</h2>
+    </div>
+    <div class="info-blocks">
+      <div class="info-block"><p>${b.texto}</p></div>
+      <div class="info-block"><div class="ib-head">${icon('fact')}<h4>CURIOSIDADES</h4></div><ul>${b.curiosidades.map(c=>`<li>${c}</li>`).join('')}</ul></div>
+    </div>
+  </div>
+  `;
+}
+
+/* ---- QUIZ ---- */
+let quizState = null;
+function pageQuizHome(){
+  return `
+  <div class="page-head">
+    <div class="eyebrow">TESTE SEUS CONHECIMENTOS</div>
+    <h1>Quiz de Anatomia</h1>
+    <p>Escolha um nível de dificuldade para começar.</p>
+  </div>
+  <div class="quiz-diff-row">
+    ${[
+      {id:'iniciante',n:1,desc:'Perguntas básicas sobre órgãos e localização.'},
+      {id:'intermediario',n:2,desc:'Funções mais específicas e relações entre estruturas.'},
+      {id:'avancado',n:3,desc:'Conceitos detalhados de anatomia e biologia.'},
+    ].map(d=>`
+    <button class="diff-card" data-diff="${d.id}">
+      <h3 style="text-transform:capitalize">${d.id}</h3>
+      <p>${d.desc}</p>
+      <div class="diff-dots">${[1,2,3].map(i=>`<i class="${i<=d.n?'on':''}"></i>`).join('')}</div>
+    </button>`).join('')}
+  </div>
+  ${Object.keys(state.quizScores).length?`
+  <div class="section-title mb-0"><h2>Suas últimas pontuações</h2></div>
+  <div class="grid cols-3" style="margin-top:12px;">
+    ${Object.entries(state.quizScores).map(([k,v])=>`<div class="card" style="cursor:default;"><h3 style="text-transform:capitalize">${k}</h3><p class="card-desc">${v.score}/${v.total} acertos</p></div>`).join('')}
+  </div>`:''}
+  `;
+}
+function pageQuizPlay(){
+  if(!quizState) return `<p>Selecione um nível de dificuldade.</p>`;
+  const list = QUIZZES[quizState.diff];
+  const q = list[quizState.i];
+  return `
+  <div class="quiz-box">
+    <div class="quiz-progress"><span style="text-transform:capitalize">${quizState.diff}</span><span>Pergunta ${quizState.i+1} de ${list.length} · Pontos: ${quizState.score}</span></div>
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-opts">
+      ${q.opts.map((opt,i)=>{
+        let cls='opt-btn';
+        if(quizState.answered){ if(i===q.r) cls+=' correct'; else if(i===quizState.selected) cls+=' wrong'; }
+        return `<button class="${cls}" data-opt="${i}" ${quizState.answered?'disabled':''}>
+        <span class="opt-letter">${String.fromCharCode(65+i)}</span>${opt}
+      </button>`;}).join('')}
+    </div>
+    ${quizState.answered?`<div class="quiz-feedback">${q.exp}</div>
+    <button class="btn btn-primary quiz-nextbtn" data-quiznext>${quizState.i<list.length-1?'Próxima pergunta':'Ver resultado'} ${icon('arrowRight')}</button>`:''}
+  </div>
+  `;
+}
+function pageQuizResult(){
+  const list = QUIZZES[quizState.diff];
+  return `
+  <div class="quiz-box quiz-result">
+    <div class="score-big">${quizState.score}/${list.length}</div>
+    <p>Você concluiu o quiz de nível <b style="text-transform:capitalize;color:var(--text)">${quizState.diff}</b>.</p>
+    <div class="hero-actions" style="justify-content:center;margin-top:20px;">
+      <button class="btn btn-primary" data-retry>Tentar novamente</button>
+      <button class="btn btn-outline" data-nav="quiz">Escolher outro nível</button>
+    </div>
+  </div>`;
+}
+
+/* ---- FAVORITES ---- */
+function pageFavorites(){
+  const favs = state.favorites.map(id=>findOrgao(id)).filter(Boolean);
+  return `
+  <div class="page-head">
+    <div class="eyebrow">SEUS SALVOS</div>
+    <h1>Favoritos</h1>
+    <p>Estruturas anatômicas que você marcou para revisar depois.</p>
+  </div>
+  ${favs.length ? `<div class="grid cols-4">${favs.map(organCard).join('')}</div>` :
+  `<div class="empty-state">${icon('star')}<h3>Nenhum favorito ainda</h3><p>Toque na estrela em qualquer estrutura para salvá-la aqui.</p></div>`}
+  `;
+}
+
+/* biology level click delegation (event bubbling, bound once) */
+/* =========================================================================
+   DELEGAÇÃO GLOBAL DE EVENTOS
+   Um único ponto de escuta para toda a aplicação: como o conteúdo de #page
+   é recriado a cada navegação, ligar eventos elemento-a-elemento depois de
+   cada render() é frágil. Delegar no document garante que todo botão,
+   cartão e link funcione sempre, em qualquer página, sem religar nada.
+   ========================================================================= */
+document.addEventListener('click', (e)=>{
+  // alternância de tema
+  if(e.target.closest('[data-theme-toggle]')){
+    state.theme = state.theme==='dark' ? 'light':'dark';
+    document.documentElement.setAttribute('data-theme', state.theme);
+    saveState(); render();
+    return;
+  }
+  // favoritar (checado antes de data-go pois o botão de favorito fica dentro do cartão)
+  const favBtn = e.target.closest('[data-fav]');
+  if(favBtn){ toggleFav(favBtn.dataset.fav); return; }
+
+  // navegação principal (sidebar / bottom nav / botões "ver todos" / hero)
+  const navBtn = e.target.closest('[data-nav]');
+  if(navBtn){ go(navBtn.dataset.nav); return; }
+
+  // resultado de busca
+  const sdItem = e.target.closest('[data-r]');
+  if(sdItem){ const [p,id] = sdItem.dataset.r.split(':'); go(p,{id}); return; }
+
+  // breadcrumbs
+  const crumbBtn = e.target.closest('[data-crumb]');
+  if(crumbBtn){ const [p,id] = crumbBtn.dataset.crumb.split(':'); go(p, id?{id}:{}); return; }
+
+  // cartões clicáveis (órgãos, sistemas, ossos, músculos, regiões, biologia...)
+  const goBtn = e.target.closest('[data-go]');
+  if(goBtn){ const [p,id] = goBtn.dataset.go.split(':'); go(p,{id}); return; }
+
+  // escolha de dificuldade do quiz
+  const diffBtn = e.target.closest('[data-diff]');
+  if(diffBtn){ quizState = {diff:diffBtn.dataset.diff, i:0, score:0, answered:false, selected:null}; go('quizplay'); return; }
+
+  // resposta do quiz
+  const optBtn = e.target.closest('[data-opt]');
+  if(optBtn && !optBtn.disabled && quizState){
+    const list = QUIZZES[quizState.diff];
+    const q = list[quizState.i];
+    const sel = parseInt(optBtn.dataset.opt,10);
+    quizState.answered = true; quizState.selected = sel;
+    if(sel===q.r) quizState.score++;
+    renderPage();
+    return;
+  }
+
+  // próxima pergunta / ver resultado
+  if(e.target.closest('[data-quiznext]')){
+    const list = QUIZZES[quizState.diff];
+    if(quizState.i < list.length-1){
+      quizState.i++; quizState.answered=false; quizState.selected=null;
+      renderPage();
+    } else {
+      state.quizScores[quizState.diff] = {score:quizState.score, total:list.length};
+      saveState();
+      go('quizresult');
+    }
+    return;
+  }
+
+  // tentar quiz novamente
+  if(e.target.closest('[data-retry]')){
+    quizState = {diff:quizState.diff, i:0, score:0, answered:false, selected:null};
+    go('quizplay');
+    return;
+  }
+
+  // níveis de organização da biologia (Célula → Tecido → Órgão → Sistema → Organismo)
+  const lvl = e.target.closest('[data-level]');
+  if(lvl){
+    const id = lvl.dataset.level;
+    route.levelSel = id;
+    const b = findBio(id);
+    markVisited(id);
+    document.querySelectorAll('.level-node').forEach(n=>n.classList.remove('active'));
+    lvl.classList.add('active');
+    const infoBox = document.getElementById('levelInfo');
+    if(infoBox) infoBox.innerHTML = `
+      <div class="info-block" style="margin:6px 0 30px;">
+        <div class="ib-head"><span style="font-size:18px;">${b.emoji}</span><h4>${b.nome.toUpperCase()}</h4></div>
+        <p>${b.texto}</p>
+      </div>`;
+    return;
+  }
+});
+
+// campos de busca (Início e Explorador) — delegado via evento 'input', que também sobe (bubble)
+document.addEventListener('input', (e)=>{
+  let boxId = null;
+  if(e.target.id==='homeSearch') boxId='homeSearchResults';
+  else if(e.target.id==='expSearch') boxId='expSearchResults';
+  else return;
+  const box = document.getElementById(boxId);
+  if(!box) return;
+  const val = e.target.value;
+  if(!val.trim()){ box.innerHTML=''; return; }
+  const res = doSearch(val);
+  box.innerHTML = `<div class="search-dropdown">${
+    res.length ? res.map(r=>`<div class="sd-item" data-r="${r.go[0]}:${r.go[1].id}"><span class="sd-tag">${r.type}</span><span>${r.label}</span></div>`).join('')
+    : `<div class="sd-empty">Nenhum resultado encontrado.</div>`
+  }</div>`;
+});
+
+// acessibilidade por teclado: cartões são <div role="button" tabindex="0">
+document.addEventListener('keydown', (e)=>{
+  if((e.key==='Enter' || e.key===' ') && e.target.matches('[role="button"]')){
+    e.preventDefault();
+    e.target.click();
+  }
+});
+
+/* initial render */
+render();
+</script>
+</body>
+</html>
